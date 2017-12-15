@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'dotenv'
 gem 'sequel'
+gem 'omniauth-shopify-oauth2'
 
 group :production do
   gem 'mysql2'

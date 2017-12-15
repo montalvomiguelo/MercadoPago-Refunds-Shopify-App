@@ -1,5 +1,7 @@
 require 'bundler'
 Bundler.require
-require './app'
 
+Dotenv.load
+
+require './app'
 run App
