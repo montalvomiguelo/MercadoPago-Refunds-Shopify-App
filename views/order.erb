@@ -1,0 +1,53 @@
+<h3><%= @order.id %></h3>
+<form action="/refund/<%= @order.id %>" method="post">
+
+  <table class="u-full-width">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Cost</th>
+        <th>Qty</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <td>Subtotal</td>
+        <td colspan="2"><%= @order.subtotal_price %></td>
+      </tr>
+      <tr>
+        <td>Shipping</td>
+        <td colspan="2"><%= @order.shipping_lines.first.price %></td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td colspan="2"><%= @order.total_price %></td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @order.line_items.each do |line_item| %>
+        <tr>
+          <td>
+            <%= line_item.title %>
+            <input type="hidden" name="refund[refund_line_items][][line_item_id]" value="<%= line_item.id %>">
+          </td>
+          <td><%= line_item.price %></td>
+          <td>
+            <input name="refund[refund_line_items][][quantity]" type="number" min="0" max="<%= line_item.quantity %>">
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <label>
+    <input name="refund[restock]" type="checkbox">
+    <span class="label-body">Restock</span>
+  </label>
+  <label>
+    <input name="refund[notify]" type="checkbox">
+    <span class="label-body">Notify</span>
+  </label>
+
+  <label for="note">Note</label>
+  <input id="note" class="u-full-width" type="text" name="refund[note]" placeholder="Note">
+  <input class="button-primary" type="submit" value="Submit">
+</form>

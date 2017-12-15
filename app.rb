@@ -1,6 +1,7 @@
 class App < Sinatra::Base
   enable :sessions
   enable :inline_templates
+  enable :method_override
 
   set :erb, :layout => :'layouts/application'
   set :api_key, ENV['SHOPIFY_API_KEY']
@@ -8,7 +9,15 @@ class App < Sinatra::Base
   set :protection, except: :frame_options
 
   use OmniAuth::Builder do
-    provider :shopify, ENV['SHOPIFY_API_KEY'], ENV['SHOPIFY_SHARED_SECRET'], :scope => 'read_orders, write_orders'
+    provider :shopify,
+             ENV['SHOPIFY_API_KEY'],
+             ENV['SHOPIFY_SHARED_SECRET'],
+             :scope => 'read_orders, write_orders',
+             setup: lambda { |env|
+               params = Rack::Utils.parse_query(env['QUERY_STRING'])
+               site_url = "https://#{params['shop']}"
+               env['omniauth.strategy'].options[:client_options][:site] = site_url
+             }
   end
 
   ShopifyAPI::Session.setup(api_key: settings.api_key, secret: settings.shared_secret)
@@ -84,6 +93,30 @@ class App < Sinatra::Base
     shopify_session do
       @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
       erb :home
+    end
+  end
+
+  get '/order/:id' do
+    shopify_session do
+      @order = ShopifyAPI::Order.find(params[:id])
+      erb :order
+    end
+  end
+
+  post '/refund/:id' do
+    shopify_session do
+
+      data = {
+        :order_id => params[:id],
+        :restock => params[:refund][:restock],
+        :notify => params[:refund][:notify],
+        :note => params[:refund][:note],
+        :refund_line_items => params[:refund][:refund_line_items]
+      }
+
+      @refund = ShopifyAPI::Refund.create(data)
+
+      @refund.inspect
     end
   end
 

@@ -1,13 +1,19 @@
 <h3>Orders</h3>
-<table>
+<table class="u-full-width">
   <thead>
-    <td>Id</td>
-    <td>Payment status</td>
+    <tr>
+      <th>Id</th>
+      <th>Payment status</th>
+    </tr>
   </thead>
   <tbody>
     <% @orders.each do |order| %>
       <tr>
-        <td><%= order.id %></td>
+        <td>
+          <a href="/order/<%= order.id %>">
+            <%= order.id %>
+          </a>
+        </td>
         <td><%= order.financial_status %></td>
       </tr>
     <% end %>
