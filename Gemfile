@@ -5,6 +5,7 @@ gem 'dotenv'
 gem 'sequel'
 gem 'omniauth-shopify-oauth2'
 gem "attr_encrypted", "~> 3.0.0"
+gem 'shopify_api'
 
 group :production do
   gem 'mysql2'

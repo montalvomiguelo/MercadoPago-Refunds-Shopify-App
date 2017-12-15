@@ -1,0 +1,15 @@
+<h3>Orders</h3>
+<table>
+  <thead>
+    <td>Id</td>
+    <td>Payment status</td>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.financial_status %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

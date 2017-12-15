@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.shopify.com/s/assets/external/app.js"></script>
+  <script type="text/javascript">
+    ShopifyApp.init({
+      apiKey: "<%= settings.api_key %>",
+      shopOrigin: "<%= current_shop_url %>",
+      debug: true
+    });
+  </script>
+</head>
+<body>
+  <main>
+    <%= yield %>
+  </main>
+</body>
+</html>
