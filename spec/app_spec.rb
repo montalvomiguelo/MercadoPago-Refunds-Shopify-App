@@ -12,9 +12,17 @@ describe App do
     App
   end
 
-  it "says the app is running" do
-    get '/'
-    expect(last_response).to be_ok
-    expect(last_response.body).to eq('The application is running')
+  describe 'GET /install' do
+    it 'responds with 200 OK' do
+      get '/install'
+      expect(last_response).to be_ok
+    end
+
+    it 'shows a form to enter the shop' do
+      get '/install'
+      expect(last_response.body).to include('Shopify App - Installation')
+      expect(last_response.body).to include('form')
+      expect(last_response.body).to include('input type="text"')
+    end
   end
 end

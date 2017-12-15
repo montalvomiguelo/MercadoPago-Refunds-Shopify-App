@@ -1,5 +1,5 @@
 class App < Sinatra::Base
-  get '/' do
-    'The application is running'
+  get '/install' do
+    erb :install
   end
 end
