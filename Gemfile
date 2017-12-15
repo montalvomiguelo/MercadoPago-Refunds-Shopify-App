@@ -4,6 +4,7 @@ gem 'sinatra'
 gem 'dotenv'
 gem 'sequel'
 gem 'omniauth-shopify-oauth2'
+gem "attr_encrypted", "~> 3.0.0"
 
 group :production do
   gem 'mysql2'

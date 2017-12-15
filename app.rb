@@ -21,6 +21,21 @@ class App < Sinatra::Base
 
   get '/auth/shopify/callback' do
     shop_name = params[:shop]
+    token = request.env['omniauth.auth']['credentials']['token']
+
+    shop = Shop.find_or_create(name: shop_name) { |s| s.token = token }
+
+    session[:shopify] = {
+      shop: shop_name,
+      token: token
+    }
+
+    return_to = env['omniauth.params']['return_to']
+    redirect return_to
+  end
+
+  get '/' do
+    "#{session[:shopify][:shop]}"
   end
 
   private
