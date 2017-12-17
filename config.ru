@@ -1,6 +1,8 @@
 require 'bundler'
 Bundler.require
 
+require 'mercadopago'
+
 Dotenv.load
 
 DB = Sequel.connect(ENV['DATABASE_URL'], logger: Logger.new(STDOUT))

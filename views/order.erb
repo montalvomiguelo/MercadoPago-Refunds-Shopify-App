@@ -49,5 +49,11 @@
 
   <label for="note">Note</label>
   <input id="note" class="u-full-width" type="text" name="refund[note]" placeholder="Note">
+
+  <label for="amount">Amount</label>
+  <input id="amount" class="u-full-width" type="text" name="refund[amount]" placeholder="Amount">
+
+  <input type="hidden" name="refund[checkout_id]" value="<%= @order.checkout_id %>">
+
   <input class="button-primary" type="submit" value="Submit">
 </form>

@@ -105,18 +105,50 @@ class App < Sinatra::Base
 
   post '/refund/:id' do
     shopify_session do
+      mercado_pago = MercadoPago.new(ENV['CLIENT_ID'], ENV['CLIENT_SECRET'])
+
+      begin
+        mercado_pago.get_access_token
+      rescue => e
+        halt 422, 'Invalid client_id or client_secret'
+      end
+
+      # Get the payment
+      checkout_id = params[:refund][:checkout_id]
+
+      response = mercado_pago.get("/collections/search?external_reference=#{checkout_id}")['response']
+
+      begin
+        payment = response['results'].first
+      rescue => e
+        halt 422, "Payment with external_reference #{checkout_id} not found"
+      end
+
+      # Issue partial refund in Mercado Pago
+      payment_id = payment['collection']['id']
 
       data = {
+        :amount => params[:refund][:amount],
+        :metadata => {
+          :reason => params[:refund][:note],
+          :external_reference => checkout_id
+        }
+      }
+
+      refund_mercado_pago = mercado_pago.post("/collections/#{payment_id}/refunds", data)
+
+      halt 422, 'Invalid amount' if refund_mercado_pago['status'] == '400'
+
+      # Create refund in Shopify
+      refund = ShopifyAPI::Refund.create(
         :order_id => params[:id],
         :restock => params[:refund][:restock],
         :notify => params[:refund][:notify],
         :note => params[:refund][:note],
         :refund_line_items => params[:refund][:refund_line_items]
-      }
+      )
 
-      @refund = ShopifyAPI::Refund.create(data)
-
-      @refund.inspect
+      redirect "/"
     end
   end
 
