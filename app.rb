@@ -150,13 +150,17 @@ class App < Sinatra::Base
       halt 422, 'Invalid amount' if refund_mercado_pago['status'] == '400'
 
       # Create refund in Shopify
-      refund = ShopifyAPI::Refund.create(
-        :order_id => params[:id],
-        :restock => params[:refund][:restock],
-        :notify => params[:refund][:notify],
-        :note => params[:refund][:note],
-        :refund_line_items => params[:refund][:refund_line_items]
-      )
+      begin
+        refund = ShopifyAPI::Refund.create(
+          :order_id => params[:id],
+          :restock => params[:refund][:restock],
+          :notify => params[:refund][:notify],
+          :note => params[:refund][:note],
+          :refund_line_items => params[:refund][:refund_line_items]
+        )
+      rescue => e
+        halt 422, "Order #{params[:id]} not found"
+      end
 
       redirect "/"
     end

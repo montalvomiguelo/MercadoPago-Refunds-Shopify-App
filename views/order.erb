@@ -32,7 +32,7 @@
           </td>
           <td><%= line_item.price %></td>
           <td>
-            <input name="refund[refund_line_items][][quantity]" type="number" min="0" max="<%= line_item.quantity %>">
+            <input name="refund[refund_line_items][][quantity]" type="number" min="0" max="<%= line_item.quantity %>" value="0">
           </td>
         </tr>
       <% end %>
