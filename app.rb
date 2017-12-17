@@ -1,4 +1,6 @@
 class App < Sinatra::Base
+  register WillPaginate::Sinatra
+
   enable :sessions
   enable :inline_templates
   enable :method_override
@@ -7,6 +9,7 @@ class App < Sinatra::Base
   set :api_key, ENV['SHOPIFY_API_KEY']
   set :shared_secret, ENV['SHOPIFY_SHARED_SECRET']
   set :protection, except: :frame_options
+  set :per_page, 30
 
   use OmniAuth::Builder do
     provider :shopify,
@@ -91,7 +94,14 @@ class App < Sinatra::Base
 
   get '/' do
     shopify_session do
-      @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
+      page = params[:page] || 1
+      total_entries = ShopifyAPI::Order.count
+      per_page = settings.per_page
+
+      @orders = ShopifyAPI::Order.find(:all, params: { limit: per_page, page: page })
+
+      @paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total_entries)
+
       erb :home
     end
   end

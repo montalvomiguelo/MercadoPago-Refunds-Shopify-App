@@ -2,7 +2,7 @@
 <table class="u-full-width">
   <thead>
     <tr>
-      <th>Id</th>
+      <th>Name</th>
       <th>Payment status</th>
     </tr>
   </thead>
@@ -11,7 +11,7 @@
       <tr>
         <td>
           <a href="/order/<%= order.id %>">
-            <%= order.id %>
+            <%= order.name %>
           </a>
         </td>
         <td><%= order.financial_status %></td>
@@ -19,3 +19,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= will_paginate @paged %>

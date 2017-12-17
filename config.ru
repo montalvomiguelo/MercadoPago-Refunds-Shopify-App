@@ -2,6 +2,7 @@ require 'bundler'
 Bundler.require
 
 require 'mercadopago'
+require 'will_paginate/array'
 
 Dotenv.load
 
