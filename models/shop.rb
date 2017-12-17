@@ -11,4 +11,5 @@ class Shop < Sequel::Model
   end
 
   attr_encrypted :token, key: secret
+  attr_encrypted :mp_client_secret, key: secret
 end

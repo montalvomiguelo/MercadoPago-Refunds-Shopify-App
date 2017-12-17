@@ -106,16 +106,18 @@ class App < Sinatra::Base
     end
   end
 
-  get '/order/:id' do
+  get '/orders/:id' do
     shopify_session do
       @order = ShopifyAPI::Order.find(params[:id])
       erb :order
     end
   end
 
-  post '/refund/:id' do
+  post '/refunds/:id' do
     shopify_session do
-      mercado_pago = MercadoPago.new(ENV['CLIENT_ID'], ENV['CLIENT_SECRET'])
+      @shop = current_shop
+
+      mercado_pago = MercadoPago.new(@shop.mp_client_id, @shop.mp_client_secret)
 
       begin
         mercado_pago.get_access_token
@@ -163,6 +165,29 @@ class App < Sinatra::Base
       end
 
       redirect "/"
+    end
+  end
+
+  get '/preferences' do
+    shopify_session do
+      @shop = current_shop
+
+      erb :preferences
+    end
+  end
+
+  put '/shop' do
+    shopify_session do
+      shop = current_shop
+
+      halt 400, 'Shop not found' unless shop
+
+      shop.mp_client_id = params[:client_id]
+      shop.mp_client_secret = params[:client_secret]
+
+      shop.save
+
+      redirect '/preferences'
     end
   end
 

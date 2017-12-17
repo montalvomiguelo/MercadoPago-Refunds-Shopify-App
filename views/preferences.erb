@@ -1,0 +1,9 @@
+<h3>MercadoPago Credentials</h3>
+<form action="/shop" method="post">
+  <input id="hidden" type="hidden" name="_method" value="put">
+  <label for="#client_id">Client ID</label>
+  <input class="u-full-width" type="text" name="client_id" value="<%= @shop.mp_client_id %>">
+  <label for="#client_secret">Client Secret</label>
+  <input class="u-full-width" type="text" name="client_secret" value="<%= @shop.mp_client_secret %>">
+  <input class="button-primary" type="submit" value="Save">
+</form>
