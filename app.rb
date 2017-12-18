@@ -57,6 +57,9 @@ class App < Sinatra::Base
         activate_shopify_api(shop_name, token)
         block.call
       end
+    rescue ActiveResource::UnauthorizedAccess
+      clear_session current_shop
+      redirect request.env['sinatra.route'].split(' ').last
     end
 
     def logout
