@@ -1,5 +1,7 @@
+ENV['RACK_ENV'] = 'development'
+
 require 'bundler'
-Bundler.require
+Bundler.require(:default, ENV['RACK_ENV'])
 
 require 'mercadopago'
 require 'will_paginate/array'

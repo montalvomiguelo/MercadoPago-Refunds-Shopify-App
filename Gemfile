@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'dotenv'
 gem 'sequel'
 gem 'omniauth-shopify-oauth2'
 gem "attr_encrypted", "~> 3.0.0"
@@ -15,6 +14,11 @@ end
 
 group :development, :test do
   gem 'sqlite3'
+  gem 'pry-byebug'
+end
+
+group :development do
+  gem 'dotenv'
 end
 
 group :test do
