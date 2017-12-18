@@ -7,7 +7,8 @@ class Shop < Sequel::Model
 
   def validate
     super
-    validates_presence [:name, :token]
+    validates_presence :name
+    validates_presence :token if new?
   end
 
   attr_encrypted :token, key: secret
