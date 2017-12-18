@@ -6,9 +6,10 @@ class App < Sinatra::Base
   enable :method_override
 
   set :erb, :layout => :'layouts/application'
+  set :protection, except: :frame_options
+
   set :api_key, ENV['SHOPIFY_API_KEY']
   set :shared_secret, ENV['SHOPIFY_SHARED_SECRET']
-  set :protection, except: :frame_options
   set :per_page, 30
 
   use OmniAuth::Builder do
