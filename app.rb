@@ -84,7 +84,7 @@ class App < Sinatra::Base
     shop_name = params[:shop]
     token = request.env['omniauth.auth']['credentials']['token']
 
-    shop = Shop.find_or_create(name: shop_name) { |s| s.token = token }
+    shop = Shop.update_or_create({name: shop_name}, token: token)
 
     session[:shopify] = {
       shop: shop_name,

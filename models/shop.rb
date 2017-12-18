@@ -1,5 +1,6 @@
 class Shop < Sequel::Model
   plugin :validation_helpers
+  plugin :update_or_create
 
   def self.secret
     @secret ||= ENV['SECRET']
