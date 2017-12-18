@@ -15,7 +15,7 @@ class App < Sinatra::Base
     provider :shopify,
              ENV['SHOPIFY_API_KEY'],
              ENV['SHOPIFY_SHARED_SECRET'],
-             :scope => 'read_orders, write_orders',
+             scope: 'read_orders,write_orders',
              setup: lambda { |env|
                params = Rack::Utils.parse_query(env['QUERY_STRING'])
                site_url = "https://#{params['shop']}"
