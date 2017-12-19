@@ -13,15 +13,7 @@ class App < Sinatra::Base
   set :per_page, 30
 
   use OmniAuth::Builder do
-    provider :shopify,
-             ENV['SHOPIFY_API_KEY'],
-             ENV['SHOPIFY_SHARED_SECRET'],
-             scope: 'read_orders,write_orders',
-             setup: lambda { |env|
-               params = Rack::Utils.parse_query(env['QUERY_STRING'])
-               site_url = "https://#{params['shop']}"
-               env['omniauth.strategy'].options[:client_options][:site] = site_url
-             }
+    provider :shopify, ENV['SHOPIFY_API_KEY'], ENV['SHOPIFY_SHARED_SECRET'], scope: 'read_orders,write_orders'
   end
 
   ShopifyAPI::Session.setup(api_key: settings.api_key, secret: settings.shared_secret)
