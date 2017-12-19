@@ -1,4 +1,4 @@
-module ShopifyHelpers
+module ShopifyHelper
   def base_url
     @base_url ||= request.base_url
   end

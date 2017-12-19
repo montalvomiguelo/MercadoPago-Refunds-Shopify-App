@@ -18,7 +18,7 @@ class App < Sinatra::Base
 
   ShopifyAPI::Session.setup(api_key: settings.api_key, secret: settings.shared_secret)
 
-  helpers ShopifyHelpers
+  helpers ShopifyHelper
 
   get '/install' do
     erb :install, layout: false
