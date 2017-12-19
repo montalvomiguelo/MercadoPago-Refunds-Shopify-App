@@ -53,7 +53,7 @@ class App < Sinatra::Base
 
       @paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total)
 
-      erb :home
+      erb :'orders/index'
     end
   end
 
@@ -65,7 +65,7 @@ class App < Sinatra::Base
         halt 404, "Order #{params[:id]} not found"
       end
 
-      erb :order
+      erb :'orders/show'
     end
   end
 
