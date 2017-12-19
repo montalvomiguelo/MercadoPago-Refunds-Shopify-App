@@ -46,12 +46,12 @@ class App < Sinatra::Base
   get '/' do
     shopify_session do
       page = params[:page] || 1
-      total_entries = ShopifyAPI::Order.count
+      total = ShopifyAPI::Order.count
       per_page = settings.per_page
 
       @orders = ShopifyAPI::Order.find(:all, params: { limit: per_page, page: page })
 
-      @paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total_entries)
+      @paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total)
 
       erb :home
     end
@@ -59,12 +59,17 @@ class App < Sinatra::Base
 
   get '/orders/:id' do
     shopify_session do
-      @order = ShopifyAPI::Order.find(params[:id])
+      begin
+        @order = ShopifyAPI::Order.find(params[:id])
+      rescue ActiveResource::ResourceNotFound => e
+        halt 404, "Order #{params[:id]} not found"
+      end
+
       erb :order
     end
   end
 
-  post '/refunds/:id' do
+  post '/orders/:id/refunds' do
     shopify_session do
       @shop = current_shop
 
@@ -72,8 +77,8 @@ class App < Sinatra::Base
 
       begin
         mercado_pago.get_access_token
-      rescue => e
-        halt 422, 'Invalid client_id or client_secret'
+      rescue RuntimeError => e
+        halt 401, 'Invalid client_id or client_secret'
       end
 
       # Get the payment
@@ -81,10 +86,10 @@ class App < Sinatra::Base
 
       response = mercado_pago.get("/collections/search?external_reference=#{checkout_id}")['response']
 
-      begin
-        payment = response['results'].first
-      rescue => e
-        halt 422, "Payment with external_reference #{checkout_id} not found"
+      payment = response['results'].first
+
+      unless payment
+        halt 404, "Payment with external_reference #{checkout_id} not found"
       end
 
       # Issue partial refund in Mercado Pago
@@ -111,8 +116,8 @@ class App < Sinatra::Base
           :note => params[:refund][:note],
           :refund_line_items => params[:refund][:refund_line_items]
         )
-      rescue => e
-        halt 422, "Order #{params[:id]} not found"
+      rescue ActiveResource::ResourceNotFound => e
+        halt 404, "Order #{params[:id]} not found"
       end
 
       redirect "/"
@@ -130,8 +135,6 @@ class App < Sinatra::Base
   put '/shop' do
     shopify_session do
       shop = current_shop
-
-      halt 400, 'Shop not found' unless shop
 
       shop.mp_client_id = params[:client_id]
       shop.mp_client_secret = params[:client_secret]
