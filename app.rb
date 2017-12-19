@@ -120,7 +120,7 @@ class App < Sinatra::Base
         halt 404, "Order #{params[:id]} not found"
       end
 
-      halt 422, 'Invalid quantity' unless refund.valid?
+      halt 422, 'Invalid refund' unless refund.valid?
 
       redirect "/"
     end
