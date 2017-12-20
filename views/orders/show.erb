@@ -38,6 +38,7 @@
       <% end %>
     </tbody>
   </table>
+
   <label>
     <input name="refund[restock]" type="checkbox">
     <span class="label-body">Restock</span>
@@ -47,11 +48,14 @@
     <span class="label-body">Notify</span>
   </label>
 
-  <label for="note">Note</label>
-  <input id="note" class="u-full-width" type="text" name="refund[note]" placeholder="Note">
+  <label for="shipping">Shipping</label>
+  <input id="shipping" class="u-full-width" type="text" name="refund[shipping][amount]" placeholder="Shipping" value="0">
 
   <label for="amount">Amount</label>
-  <input id="amount" class="u-full-width" type="text" name="refund[amount]" placeholder="Amount">
+  <input id="amount" class="u-full-width" type="text" name="refund[amount]" placeholder="Amount" value="0">
+
+  <label for="note">Note</label>
+  <input id="note" class="u-full-width" type="text" name="refund[note]" placeholder="Note">
 
   <input type="hidden" name="refund[checkout_id]" value="<%= @order.checkout_id %>">
 

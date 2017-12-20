@@ -88,9 +88,7 @@ class App < Sinatra::Base
 
       payment = response['results'].first
 
-      unless payment
-        halt 404, "Payment with external_reference #{checkout_id} not found"
-      end
+      halt 404, "Payment with external_reference #{checkout_id} not found" unless payment
 
       # Issue partial refund in Mercado Pago
       payment_id = payment['collection']['id']
@@ -114,7 +112,9 @@ class App < Sinatra::Base
           :restock => params[:refund][:restock],
           :notify => params[:refund][:notify],
           :note => params[:refund][:note],
-          :refund_line_items => params[:refund][:refund_line_items]
+          :shipping => { :amount => params[:refund][:shipping][:amount] },
+          :refund_line_items => params[:refund][:refund_line_items],
+          :transactions => []
         )
       rescue ActiveResource::ResourceNotFound => e
         halt 404, "Order #{params[:id]} not found"
