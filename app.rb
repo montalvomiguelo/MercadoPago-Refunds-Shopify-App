@@ -116,8 +116,8 @@ class App < Sinatra::Base
           :refund_line_items => params[:refund][:refund_line_items],
           :transactions => []
         )
-      rescue ActiveResource::ResourceNotFound => e
-        halt 404, "Order #{params[:id]} not found"
+      rescue ActiveResource::ResourceNotFound, ActiveResource::ServerError => e
+        halt 422, "Invalid refund for order #{params[:id]}"
       end
 
       halt 422, 'Invalid refund' unless refund.valid?
