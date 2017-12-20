@@ -58,7 +58,6 @@
         <tr>
           <td>
             <%= line_item.title %>
-            <input type="hidden" name="refund[refund_line_items][][line_item_id]" value="<%= line_item.id %>">
           </td>
           <td>
             <%= line_item.price %>
@@ -67,7 +66,12 @@
             <%= sum_tax_lines(line_item.tax_lines) %>
           </td>
           <td>
-            <input name="refund[refund_line_items][][quantity]" type="number" min="0" max="<%= line_item.quantity %>" value="0">
+            <% if line_item_refunds_in_order(line_item, @order) < line_item.quantity %>
+              <input type="hidden" name="refund[refund_line_items][][line_item_id]" value="<%= line_item.id %>">
+              <input name="refund[refund_line_items][][quantity]" type="number" min="0" max="<%= line_item.quantity - line_item_refunds_in_order(line_item, @order) %>" value="0">
+            <% else %>
+              <span>Already returned</span>
+            <% end %>
           </td>
         </tr>
       <% end %>
