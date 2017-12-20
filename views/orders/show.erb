@@ -63,7 +63,7 @@
             <%= line_item.price %>
           </td>
           <td>
-            <%= sum_tax_lines(line_item.tax_lines) %>
+            <%= (sum_tax_lines(line_item.tax_lines) / line_item.quantity).round(2) %>
           </td>
           <td>
             <% if line_item_refunds_in_order(line_item, @order) < line_item.quantity %>
