@@ -1,4 +1,4 @@
-<h3><%= @order.name %></h3>
+<h4><%= @order.name %></h4>
 <form action="/orders/<%= @order.id %>/refunds" method="post">
 
   <table class="u-full-width">
@@ -7,14 +7,14 @@
         <th>Title</th>
         <th>Cost</th>
         <th>Tax</th>
-        <th>Qty</th>
+        <th colspan="2">Qty</th>
       </tr>
     </thead>
     <tfoot>
       <tr>
         <td>
           <strong>Subtotal</strong>
-          <td colspan="3">
+          <td colspan="4">
             <%= @order.subtotal_price %>
           </td>
         </td>
@@ -35,7 +35,7 @@
             <% end %>
           <% end %>
         </td>
-        <td colspan="2">
+        <td colspan="3">
           <% @order.shipping_lines.each do |shipping_line| %>
             <%= shipping_line.sum_tax_lines %>
             <% unless shipping_line == @order.shipping_lines.last %>
@@ -48,13 +48,13 @@
         <td>
           <strong>Tax</strong>
         </td>
-        <td colspan="3"><%= @order.total_tax %></td>
+        <td colspan="4"><%= @order.total_tax %></td>
       </tr>
       <tr>
         <td>
           <strong>Total</strong>
         </td>
-        <td colspan="3"><%= @order.total_price %></td>
+        <td colspan="4"><%= @order.total_price %></td>
       </tr>
     </tfoot>
     <tbody>
@@ -81,6 +81,7 @@
           <td>
             <%= line_item.taxes_per_unit %>
           </td>
+          <td><%= line_item.quantity %></td>
           <td>
             <% if @order.refunds_for_line_item(line_item) < line_item.quantity %>
               <input type="hidden" name="refund[refund_line_items][][line_item_id]" value="<%= line_item.id %>">
