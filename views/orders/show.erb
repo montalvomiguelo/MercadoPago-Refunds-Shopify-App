@@ -26,6 +26,10 @@
         <td>
           <% @order.shipping_lines.each do |shipping_line| %>
             <%= shipping_line.price %>
+            <% if @order.discount_code.type == 'shipping' %>
+              <br>&minus;
+              <small><%= shipping_line.discounted_price %></small>
+            <% end %>
             <% unless shipping_line == @order.shipping_lines.last %>
               <br>
             <% end %>
