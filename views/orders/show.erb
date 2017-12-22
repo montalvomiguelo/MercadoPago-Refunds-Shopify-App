@@ -63,9 +63,19 @@
           </td>
           <td>
             <%= line_item.price %>
+            <% if line_item.discount? %>
+              <br>
+              <small>&minus;
+                <% case @order.discount_code.type when 'percentage' %>
+                  <%= (@order.discount_rate * line_item.price.to_f).round(2) %>
+                <% when 'fixed_amount' %>
+                  <%= @order.discount_amount %>
+                <% end %>
+              </small>
+            <% end %>
           </td>
           <td>
-            <%= (sum_tax_lines(line_item.tax_lines) / line_item.quantity) %>
+            <%= line_item.taxes_per_unit %>
           </td>
           <td>
             <% if line_item_refunds_in_order(line_item, @order) < line_item.quantity %>
