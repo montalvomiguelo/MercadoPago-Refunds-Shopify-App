@@ -7,10 +7,6 @@ class ShopifyAPI::Order
     total_discounts.to_f / total_line_items_price.to_f
   end
 
-  def discount_amount
-    discount_code.amount
-  end
-
   def refunds_for_line_item(line_item)
     refunds_with_line_item = refunds_with_line_item(line_item)
     refund_line_items = refund_line_items(line_item, refunds_with_line_item)
