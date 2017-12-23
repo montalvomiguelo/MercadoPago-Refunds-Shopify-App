@@ -47,6 +47,10 @@
       <tr>
         <td>
           <strong>Tax</strong>
+          <% if @order.taxes_included %>
+            <br>
+            <small>Included</small>
+          <% end %>
         </td>
         <td colspan="4"><%= @order.total_tax %></td>
       </tr>
