@@ -26,7 +26,7 @@
         <td>
           <% @order.shipping_lines.each do |shipping_line| %>
             <%= shipping_line.price %>
-            <% if @order.discount_code.type == 'shipping' %>
+            <% if @order.discount_code && @order.discount_code.type == 'shipping' %>
               <br>&minus;
               <small><%= shipping_line.discounted_price %></small>
             <% end %>
@@ -37,7 +37,7 @@
         </td>
         <td colspan="3">
           <% @order.shipping_lines.each do |shipping_line| %>
-            <%= shipping_line.sum_tax_lines %>
+            <%= shipping_line.sum_tax_lines.round(2) %>
             <% unless shipping_line == @order.shipping_lines.last %>
               <br>
             <% end %>
@@ -67,14 +67,10 @@
           </td>
           <td>
             <%= line_item.price %>
-            <% if line_item.discount? %>
+            <% if line_item.has_discount_with_order?(@order) %>
               <br>
               <small>&minus;
-                <% case @order.discount_code.type when 'percentage' %>
-                  <%= (@order.discount_rate * line_item.price.to_f).round(2) %>
-                <% when 'fixed_amount' %>
-                  <%= @order.discount_amount %>
-                <% end %>
+                <%= (@order.discount_rate * line_item.price.to_f).round(2) %>
               </small>
             <% end %>
           </td>

@@ -7,11 +7,16 @@ class ShopifyAPI::LineItem
     (taxes_sum / quantity).round(2)
   end
 
-  def discount?
+  def has_discount_with_order?(order)
+    order_includes_taxes?(order)
     find_discounted_tax_line
   end
 
   private
+
+    def order_includes_taxes?(order)
+      @taxes_included ||= order.taxes_included
+    end
 
     def find_discounted_tax_line
       tax_lines.detect do |tax_line|
@@ -20,7 +25,10 @@ class ShopifyAPI::LineItem
     end
 
     def tax_line_price(tax_line)
-      (price.to_f * tax_line.rate).round(2)
+      unless @taxes_included
+        return (price.to_f * tax_line.rate).round(2)
+      end
+      (tax_line.rate * price.to_f / (1 + tax_line.rate)).round(2)
     end
 
 end
