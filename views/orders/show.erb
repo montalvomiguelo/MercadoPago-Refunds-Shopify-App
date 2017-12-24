@@ -60,6 +60,12 @@
         </td>
         <td colspan="4"><%= @order.total_price %></td>
       </tr>
+      <tr>
+        <td>
+          <strong>Refund</strong>
+        </td>
+        <td colspan="4"><%= @order.total_refund %></td>
+      </tr>
     </tfoot>
     <tbody>
       <% @order.line_items.each do |line_item| %>

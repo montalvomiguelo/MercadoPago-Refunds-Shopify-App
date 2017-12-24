@@ -105,6 +105,10 @@ class App < Sinatra::Base
 
       halt 422, 'Invalid amount' if refund_mercado_pago['status'] == '400'
 
+      # Store refund amount in metafield
+      order = ShopifyAPI::Order.find(params[:id])
+      order.persist_refund_amount(refund_mercado_pago['response']['amount'])
+
       # Create refund in Shopify
       begin
         refund = ShopifyAPI::Refund.create(
