@@ -1,5 +1,5 @@
 <h4><%= @order.name %></h4>
-<form action="/orders/<%= @order.id %>/refunds" method="post">
+<form action="/orders/<%= @order.id %>/refunds/calculate" method="post">
 
   <table class="u-full-width">
     <thead>
@@ -88,25 +88,8 @@
     </tbody>
   </table>
 
-  <label>
-    <input name="refund[restock]" type="checkbox">
-    <span class="label-body">Restock</span>
-  </label>
-  <label>
-    <input name="refund[notify]" type="checkbox" checked>
-    <span class="label-body">Notify</span>
-  </label>
-
   <label for="shipping">Shipping</label>
   <input id="shipping" class="u-full-width" type="text" name="refund[shipping][amount]" placeholder="Shipping" value="0">
 
-  <label for="amount">Amount</label>
-  <input id="amount" class="u-full-width" type="text" name="refund[amount]" placeholder="Amount" value="0">
-
-  <label for="note">Note</label>
-  <input id="note" class="u-full-width" type="text" name="refund[note]" placeholder="Note">
-
-  <input type="hidden" name="refund[checkout_id]" value="<%= @order.checkout_id %>">
-
-  <input class="button-primary" type="submit" value="Submit">
+  <input class="button-primary" type="submit" value="Calculate">
 </form>

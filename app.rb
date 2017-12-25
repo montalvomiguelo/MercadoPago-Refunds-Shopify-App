@@ -59,6 +59,8 @@ class App < Sinatra::Base
 
   get '/orders/:id' do
     shopify_session do
+
+      # Verify order exists
       begin
         @order = ShopifyAPI::Order.find(params[:id])
       rescue ActiveResource::ResourceNotFound => e
@@ -69,28 +71,62 @@ class App < Sinatra::Base
     end
   end
 
-  post '/orders/:id/refunds' do
+  post '/orders/:id/refunds/calculate' do
     shopify_session do
-      @shop = current_shop
 
-      mercado_pago = MercadoPago.new(@shop.mp_client_id, @shop.mp_client_secret)
+      # Verify order exists
+      begin
+        @order = ShopifyAPI::Order.find(params[:id])
+      rescue ActiveResource::ResourceNotFound => e
+        halt 404, 'Order not found'
+      end
+
+      data = {
+        :shipping => { :amount => params[:refund][:shipping][:amount] },
+        :refund_line_items => params[:refund][:refund_line_items]
+      }
 
       begin
-        mercado_pago.get_access_token
+        @refund = ShopifyAPI::Refund.calculate(data, :params => {:order_id => params[:id]})
+      rescue ActiveResource::ResourceInvalid => e
+        halt 422, 'Invalid refund'
+      end
+
+      erb :'orders/refund'
+    end
+  end
+
+  post '/orders/:id/refunds' do
+    shopify_session do
+
+      @shop = current_shop
+
+      # Verify order exists
+      begin
+        @order = ShopifyAPI::Order.find(params[:id])
+      rescue ActiveResource::ResourceNotFound => e
+        halt 404, 'Order not found'
+      end
+
+      # Verify MercadoPago credentials
+      mercadopago = MercadoPago.new(@shop.mp_client_id, @shop.mp_client_secret)
+
+      begin
+        mercadopago.get_access_token
       rescue RuntimeError => e
         halt 401, 'Invalid client_id or client_secret'
       end
 
       # Get the payment
-      checkout_id = params[:refund][:checkout_id]
+      checkout_id = @order.checkout_id
 
-      response = mercado_pago.get("/collections/search?external_reference=#{checkout_id}")['response']
+      response = mercadopago.get("/collections/search?external_reference=#{checkout_id}")['response']
 
       payment = response['results'].first
 
       halt 404, "Payment with external_reference #{checkout_id} not found" unless payment
 
-      # Issue partial refund in Mercado Pago
+      # Issue partial refund in MercadoPago
       payment_id = payment['collection']['id']
 
       data = {
@@ -101,13 +137,12 @@ class App < Sinatra::Base
         }
       }
 
-      refund_mercado_pago = mercado_pago.post("/collections/#{payment_id}/refunds", data)
+      transaction = mercadopago.post("/collections/#{payment_id}/refunds", data)
 
-      halt 422, 'Invalid amount' if refund_mercado_pago['status'] == '400'
+      halt 422, 'Invalid amount' if transaction['status'] == '400'
 
       # Store refund amount in metafield
-      order = ShopifyAPI::Order.find(params[:id])
-      order.persist_refund_amount(refund_mercado_pago['response']['amount'])
+      @order.persist_refund_amount(transaction['response']['amount'])
 
       # Create refund in Shopify
       begin
@@ -120,13 +155,13 @@ class App < Sinatra::Base
           :refund_line_items => params[:refund][:refund_line_items],
           :transactions => []
         )
-      rescue ActiveResource::ResourceNotFound, ActiveResource::ServerError => e
-        halt 422, "Invalid refund for order #{params[:id]}"
+      rescue ActiveResource::ServerError => e
+        halt 422, 'Invalid refund params'
       end
 
       halt 422, 'Invalid refund' unless refund.valid?
 
-      redirect "/"
+      redirect "/orders/#{params[:id]}"
     end
   end
 

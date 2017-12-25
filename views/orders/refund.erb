@@ -1,0 +1,78 @@
+<h4>Refund</h4>
+<form action="/orders/<%= @order.id %>/refunds" method="post">
+
+  <h5>Shipping</h5>
+  <table class="u-full-width">
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Tax</th>
+        <th>Maximum refundable</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= @refund.shipping.amount %>
+          <input type="hidden" name="refund[shipping][amount]" value="<%= @refund.shipping.amount %>">
+        </td>
+        <td><%= @refund.shipping.tax %></td>
+        <td><%= @refund.shipping.maximum_refundable %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h5>Line items</h5>
+  <table class="u-full-width">
+    <thead>
+      <tr>
+        <th>Line item id</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+        <th>Total tax</th>
+        <th>Discounted price</th>
+        <th>Discounted total price</th>
+        <th>Total cart discount amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @refund.refund_line_items.each do |item| %>
+        <tr>
+          <td>
+            <input type="hidden" name="refund[refund_line_items][][line_item_id]" value="<%= item.line_item_id %>">
+            <%= item.line_item_id %>
+          </td>
+          <td>
+            <input name="refund[refund_line_items][][quantity]" type="hidden" value="<%= item.quantity %>">
+            <%= item.quantity %>
+          </td>
+          <td><%= item.price %></td>
+          <td><%= item.subtotal %></td>
+          <td><%= item.total_tax %></td>
+          <td><%= item.discounted_price %></td>
+          <td><%= item.discounted_total_price %></td>
+          <td><%= item.total_cart_discount_amount %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <label>
+    <input name="refund[restock]" type="checkbox" checked>
+    <span class="label-body">Restock</span>
+  </label>
+  <label>
+    <input name="refund[notify]" type="checkbox" checked>
+    <span class="label-body">Notify</span>
+  </label>
+
+  <label for="amount">Amount</label>
+  <input id="amount" class="u-full-width" type="text" name="refund[amount]" placeholder="Amount" value="0">
+
+  <label for="note">Note</label>
+  <input id="note" class="u-full-width" type="text" name="refund[note]" placeholder="Note">
+
+  <a class="button" href="/orders/<%= @order.id %>">Calculate</a>
+  <input class="button-primary" type="submit" value="Refund">
+</form>
