@@ -24,8 +24,8 @@ class ShopifyAPI::Order
 
     def update_metafield_value(metafield, value)
       amount = metafield.value.to_f
-      amount += value
-      metafield.value = amount
+      amount += BigDecimal(value.to_s)
+      metafield.value = amount.to_s('F')
       metafield.save
     end
 
