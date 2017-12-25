@@ -35,20 +35,16 @@ class ShopifyAPI::Order
 
     def refunds_with_line_item(line_item)
       refunds.select do |refund|
-        refund.refund_line_items.any? { |refund_item| refund_item.line_item.id == line_item.id }
+        refund.contains_line_item?(line_item)
       end
     end
 
     def refund_line_items(line_item, refunds_with_line_item)
-      refunds_with_line_item.map { |refund| find_refund_for_item(line_item, refund.refund_line_items) }
-    end
-
-    def find_refund_for_item(line_item, refund_line_items)
-      refund_line_items.detect { |refund_item| refund_item.line_item.id == line_item.id }
+      refunds_with_line_item.map { |refund| refund.find_refund_line_with_item(line_item) }
     end
 
     def sum_refund_line_items(refund_line_items)
-      refund_line_items.inject(0) { |sum, refund_item| sum + refund_item.quantity }
+      refund_line_items.inject(0) { |sum, refund_line| sum + refund_line.quantity }
     end
 
 end
