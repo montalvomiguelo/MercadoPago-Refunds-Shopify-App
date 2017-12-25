@@ -6,11 +6,22 @@
       <tr>
         <th>Title</th>
         <th>Cost</th>
-        <th>Tax</th>
         <th colspan="2">Qty</th>
       </tr>
     </thead>
     <tfoot>
+      <% @order.discount_codes.each do |discount_code| %>
+        <tr>
+          <td>
+            <strong>Discount</strong>
+            <br>
+            <small><%= discount_code.code %></small>
+          </td>
+          <td colspan="4">
+            <%= discount_code.amount %>
+          </td>
+        </tr>
+      <% end %>
       <tr>
         <td>
           <strong>Subtotal</strong>
@@ -19,31 +30,16 @@
           </td>
         </td>
       </tr>
-      <tr>
-        <td>
-          <strong>Shipping</strong>
-        </td>
-        <td>
-          <% @order.shipping_lines.each do |shipping_line| %>
+      <% @order.shipping_lines.each do |shipping_line| %>
+        <tr>
+          <td>
+            <strong>Shipping</strong>
+          </td>
+          <td colspan="4">
             <%= shipping_line.price %>
-            <% if @order.discount_code && @order.discount_code.type == 'shipping' %>
-              <br>&minus;
-              <small><%= shipping_line.discounted_price %></small>
-            <% end %>
-            <% unless shipping_line == @order.shipping_lines.last %>
-              <br>
-            <% end %>
-          <% end %>
-        </td>
-        <td colspan="3">
-          <% @order.shipping_lines.each do |shipping_line| %>
-            <%= shipping_line.sum_tax_lines.round(2) %>
-            <% unless shipping_line == @order.shipping_lines.last %>
-              <br>
-            <% end %>
-          <% end %>
-        </td>
-      </tr>
+          </td>
+        </tr>
+      <% end %>
       <tr>
         <td>
           <strong>Tax</strong>
@@ -77,15 +73,6 @@
           </td>
           <td>
             <%= line_item.price %>
-            <% if line_item.has_discount_with_order?(@order) %>
-              <br>
-              <small>&minus;
-                <%= (@order.discount_rate * line_item.price.to_f).round(2) %>
-              </small>
-            <% end %>
-          </td>
-          <td>
-            <%= line_item.taxes_per_unit %>
           </td>
           <td><%= line_item.quantity %></td>
           <td>
