@@ -18,7 +18,7 @@ class App < Sinatra::Base
 
   ShopifyAPI::Session.setup(api_key: settings.api_key, secret: settings.shared_secret)
 
-  helpers ShopifyHelper
+  helpers ShopifyHelper, OrderHelper
 
   get '/install' do
     erb :install, layout: false
@@ -60,12 +60,7 @@ class App < Sinatra::Base
   get '/orders/:id' do
     shopify_session do
 
-      # Verify order exists
-      begin
-        @order = ShopifyAPI::Order.find(params[:id])
-      rescue ActiveResource::ResourceNotFound => e
-        halt 404, "Order #{params[:id]} not found"
-      end
+      find_order!
 
       erb :'orders/show'
     end
@@ -74,12 +69,7 @@ class App < Sinatra::Base
   post '/orders/:id/refunds/calculate' do
     shopify_session do
 
-      # Verify order exists
-      begin
-        @order = ShopifyAPI::Order.find(params[:id])
-      rescue ActiveResource::ResourceNotFound => e
-        halt 404, 'Order not found'
-      end
+      find_order!
 
       data = {
         :shipping => { :amount => params[:refund][:shipping][:amount] },
@@ -101,12 +91,7 @@ class App < Sinatra::Base
 
       @shop = current_shop
 
-      # Verify order exists
-      begin
-        @order = ShopifyAPI::Order.find(params[:id])
-      rescue ActiveResource::ResourceNotFound => e
-        halt 404, 'Order not found'
-      end
+      find_order!
 
       # Verify MercadoPago credentials
       mercadopago = MercadoPago.new(@shop.mp_client_id, @shop.mp_client_secret)
