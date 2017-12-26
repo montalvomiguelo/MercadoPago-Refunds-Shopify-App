@@ -11,21 +11,23 @@ class ShopifyAPI::Order
 
     return update_metafield_value(metafield, amount) if metafield
 
-    add_metafield(ShopifyAPI::Metafield.new(namespace: 'mercadopago', key: 'refund_amount', value: amount, value_type: 'string'))
+    value = amount.to_money
+
+    add_metafield(ShopifyAPI::Metafield.new(namespace: 'mercadopago', key: 'refund_amount', value: value.cents, value_type: 'string'))
   end
 
   def total_refund
     metafield = find_metafield_by_namespace('mercadopago')
-    return metafield.value if metafield
-    0
+    return Money.new(metafield.value) if metafield
+    Money.new(0)
   end
 
   private
 
     def update_metafield_value(metafield, value)
-      amount = metafield.value.to_f
-      amount += BigDecimal(value.to_s)
-      metafield.value = amount.to_s('F')
+      amount = Money.new(metafield.value)
+      amount += value.to_money
+      metafield.value = amount.cents
       metafield.save
     end
 
