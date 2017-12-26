@@ -14,7 +14,15 @@
             <%= order.name %>
           </a>
         </td>
-        <td><%= order.financial_status %></td>
+        <td>
+          <% if order.tag_include?(settings.tag_partially_refunded) %>
+            Partially Refunded
+          <% elsif order.tags_include?(settings.tag_refunded) %>
+            Refunded
+          <% else %>
+            Paid
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

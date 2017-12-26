@@ -1,5 +1,25 @@
 class ShopifyAPI::Order
 
+  def tags_include?(tag)
+    tags_list.include?(tag)
+  end
+
+  def tags_list
+    @tags_list ||= tags.split(', ')
+  end
+
+  def tags_remove(tag)
+    @tags_list = tags_list - [tag]
+  end
+
+  def tags_string
+    tags_list.join(', ')
+  end
+
+  def refunded?
+    Money.new(total_refund) == total_price.to_money
+  end
+
   def refunds_for_line_item(line_item)
     refunds_with_line_item = refunds_with_line_item(line_item)
     refund_line_items = refund_line_items(line_item, refunds_with_line_item)

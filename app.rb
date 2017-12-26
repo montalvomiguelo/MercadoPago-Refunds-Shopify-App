@@ -12,6 +12,9 @@ class App < Sinatra::Base
   set :shared_secret, ENV['SHOPIFY_SHARED_SECRET']
   set :per_page, 30
 
+  set :tag_partially_refunded, 'MercadoPago Partially Refunded'
+  set :tag_refunded, 'MercadoPago Refunded'
+
   use OmniAuth::Builder do
     provider :shopify, ENV['SHOPIFY_API_KEY'], ENV['SHOPIFY_SHARED_SECRET'], scope: 'read_orders,write_orders'
   end
@@ -128,6 +131,18 @@ class App < Sinatra::Base
 
       # Store refund amount in metafield
       @order.persist_refund_amount(transaction['response']['amount'])
+
+      # Add order tags
+      if @order.refunded?
+        @order.tags_remove(settings.tag_partially_refunded)
+        @order.tags_list << settings.tag_refunded
+      else
+        @order.tags_list << settings.tag_partially_refunded unless @order.tags_include?(settings.tag_partially_refunded)
+      end
+
+      @order.tags = @order.tags_string
+
+      @order.save
 
       # Create refund in Shopify
       begin
