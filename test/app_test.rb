@@ -17,6 +17,14 @@ class TestApp < Minitest::Test
     assert last_response.ok?
   end
 
+  def test_root_with_session_activates_api
+    set_session
+    App.any_instance.expects(:activate_shopify_api).with(@shop_name, 'token')
+    ShopifyAPI::Order.expects(:find).returns([])
+    get '/'
+    assert last_response.ok?
+  end
+
   private
 
     def set_session(shop = 'snowdevil.myshopify.com', token = 'token')
