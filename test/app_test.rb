@@ -25,6 +25,12 @@ class TestApp < Minitest::Test
     assert last_response.ok?
   end
 
+  def test_root_without_session_redirects_to_install
+    get '/'
+    follow_redirect!
+    assert last_response.body.include?('Install')
+  end
+
   private
 
     def set_session(shop = 'snowdevil.myshopify.com', token = 'token')
