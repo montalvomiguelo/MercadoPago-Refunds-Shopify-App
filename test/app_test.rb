@@ -31,6 +31,11 @@ class TestApp < Minitest::Test
     assert last_response.body.include?('Install')
   end
 
+  def test_root_with_shop_redirects_to_auth
+    App.any_instance.expects(:redirect_javascript)
+    get '/?shop=othertestshop.myshopify.com'
+  end
+
   private
 
     def set_session(shop = 'snowdevil.myshopify.com', token = 'token')
