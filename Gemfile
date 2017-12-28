@@ -28,4 +28,7 @@ group :test do
   gem 'minitest'
   gem 'mocha', require: false
   gem 'fakeweb'
+  gem "factory_girl", "~> 4.0"
+  gem 'database_cleaner'
+  gem 'minitest-around'
 end

@@ -1,5 +1,5 @@
 ENV['RACK_ENV'] = 'test'
-ENV['SECRET'] = 'secret'
+ENV['SECRET'] = 'This is a key that is 256 bits!!'
 
 require 'bundler'
 Bundler.require(:default, ENV['RACK_ENV'])
@@ -22,10 +22,16 @@ Dir[File.join(File.dirname(__FILE__), '../helpers', '*.rb')].each { |helper| req
 Dir[File.join(File.dirname(__FILE__), '../lib', '**/*.rb')].each { |file| require file }
 require File.expand_path('../../app', __FILE__)
 
+require File.expand_path('../factories', __FILE__)
+
 FakeWeb.allow_net_connect = false
+
+DatabaseCleaner.strategy = :transaction
+DatabaseCleaner.clean_with(:truncation)
 
 module Helpers
   include Rack::Test::Methods
+  include FactoryGirl::Syntax::Methods
 
   def load_fixture(name)
     File.read("./test/fixtures/#{name}")
