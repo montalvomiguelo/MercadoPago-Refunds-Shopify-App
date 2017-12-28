@@ -20,6 +20,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'rake'
   gem 'dotenv'
 end
 

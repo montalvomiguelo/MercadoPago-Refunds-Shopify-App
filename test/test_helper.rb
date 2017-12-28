@@ -1,5 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 ENV['SECRET'] = 'This is a key that is 256 bits!!'
+ENV['DATABASE_URL']='sqlite://db/test.sqlite3'
 
 require 'bundler'
 Bundler.require(:default, ENV['RACK_ENV'])
@@ -12,10 +13,7 @@ require 'fakeweb'
 require 'mercadopago'
 require 'will_paginate/array'
 
-file_path = File.expand_path('../../config/database.yml', __FILE__)
-dbconfig = YAML.load_file(file_path)
-
-DB = Sequel.connect(dbconfig[ENV['RACK_ENV']])
+DB = Sequel.connect(ENV['DATABASE_URL'])
 
 Dir[File.join(File.dirname(__FILE__), '../models', '*.rb')].each { |model| require model }
 Dir[File.join(File.dirname(__FILE__), '../helpers', '*.rb')].each { |helper| require helper }
