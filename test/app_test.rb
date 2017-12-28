@@ -15,7 +15,7 @@ class TestApp < Minitest::Test
     DatabaseCleaner.clean
   end
 
-  def test_installation_page
+  def test_installation_page_returns_success
     get '/install'
     assert last_response.ok?
   end
@@ -36,22 +36,18 @@ class TestApp < Minitest::Test
     assert_match 'Installation', last_response.body
   end
 
-  def test_authenticate_redirects_to_shopiy_auth
+  def test_authenticate_redirects_to_shopiy_auth_via_javascript
     App.any_instance.expects(:base_url).returns(@base_url)
     App.any_instance.expects(:redirect_javascript)
     post '/login', {:shop => @shop_name}
   end
 
-  def test_callback_persists_shop_data
+  def test_callback_persists_shop_in_database
     mock_shopify_omniauth
 
+    Shop.expects(:update_or_create)
+
     get '/auth/shopify/callback', {:shop => @shop_name}
-
-    shop = Shop.find(name: @shop_name)
-
-    refute_nil shop
-    assert @shop_name, shop.name
-    assert '1234', shop.token
   end
 
   def test_callback_creates_a_session_for_the_shop
@@ -62,6 +58,16 @@ class TestApp < Minitest::Test
     refute_nil last_request.session[:shopify]
     assert_equal @shop_name, last_request.session[:shopify][:shop]
     assert_equal '1234', last_request.session[:shopify][:token]
+  end
+
+  def test_callback_redirects_to_root_path
+    mock_shopify_omniauth
+
+    get '/auth/shopify/callback', {:shop => @shop_name}
+
+    follow_redirect!
+    assert last_response.ok?
+    assert_match 'Order', last_response.body
   end
 
   def test_root_with_session
