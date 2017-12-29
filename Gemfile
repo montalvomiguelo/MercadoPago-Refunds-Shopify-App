@@ -9,6 +9,7 @@ gem 'mercadopago-sdk'
 gem 'will_paginate', '~> 3.1.0'
 gem 'omniauth-shopify-oauth2'
 gem 'monetize'
+gem 'puma'
 
 group :production do
   gem 'mysql2'

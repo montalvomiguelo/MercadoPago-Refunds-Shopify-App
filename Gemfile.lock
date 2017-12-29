@@ -74,6 +74,7 @@ GEM
     pry-byebug (3.5.0)
       byebug (~> 9.1)
       pry (~> 0.10)
+    puma (3.11.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -113,6 +114,7 @@ DEPENDENCIES
   mysql2
   omniauth-shopify-oauth2
   pry-byebug
+  puma
   rack-test
   rake
   sequel
