@@ -6,7 +6,7 @@ class App < Sinatra::Base
   enable :method_override
 
   set :erb, :layout => :'layouts/application'
-  set :protection, except: :frame_options
+  set :protection, :except => :frame_options
 
   set :api_key, ENV['SHOPIFY_API_KEY']
   set :shared_secret, ENV['SHOPIFY_SHARED_SECRET']
@@ -16,7 +16,7 @@ class App < Sinatra::Base
   set :tag_refunded, 'MercadoPago Refunded'
 
   configure :development do
-    disable :static_cache_control
+    register Sinatra::Reloader
   end
 
   use OmniAuth::Builder do
