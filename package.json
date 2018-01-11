@@ -21,5 +21,9 @@
     "gulp-util": "^3.0.8",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }

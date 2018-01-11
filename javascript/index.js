@@ -1,3 +1,7 @@
-const sayHello = (name) => console.log(`Hello ${name}`);
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-sayHello('diana');
+ReactDOM.render(
+  <h1>Hello, world!</h1>,
+  document.getElementById('root')
+);

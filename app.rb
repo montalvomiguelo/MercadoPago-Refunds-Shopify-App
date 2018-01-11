@@ -15,6 +15,10 @@ class App < Sinatra::Base
   set :tag_partially_refunded, 'MercadoPago Partially Refunded'
   set :tag_refunded, 'MercadoPago Refunded'
 
+  configure :development do
+    disable :static_cache_control
+  end
+
   use OmniAuth::Builder do
     provider :shopify, ENV['SHOPIFY_API_KEY'], ENV['SHOPIFY_SHARED_SECRET'], scope: 'read_orders,write_orders'
   end
@@ -48,15 +52,17 @@ class App < Sinatra::Base
 
   get '/' do
     shopify_session do
-      page = params[:page] || 1
-      total = ShopifyAPI::Order.count
-      per_page = settings.per_page
+      #page = params[:page] || 1
+      #total = ShopifyAPI::Order.count
+      #per_page = settings.per_page
 
-      @orders = ShopifyAPI::Order.find(:all, params: { limit: per_page, page: page })
+      #@orders = ShopifyAPI::Order.find(:all, params: { limit: per_page, page: page })
 
-      @paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total)
+      #@paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total)
 
-      erb :'orders/index'
+      #erb :'orders/index'
+
+      erb :'app', layout: false
     end
   end
 
