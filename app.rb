@@ -1,6 +1,4 @@
 class App < Sinatra::Base
-  register WillPaginate::Sinatra
-
   enable :sessions
   enable :inline_templates
   enable :method_override
