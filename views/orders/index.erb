@@ -10,7 +10,7 @@
     <% @orders.each do |order| %>
       <tr>
         <td>
-          <a href="/orders/<%= order.id %>">
+          <a href="/orders?id=<%= order.id %>">
             <%= order.name %>
           </a>
         </td>
@@ -27,5 +27,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= will_paginate @paged %>

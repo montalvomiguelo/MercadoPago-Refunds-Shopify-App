@@ -2,7 +2,6 @@ require 'bundler'
 Bundler.require(:default, ENV['RACK_ENV'])
 
 require 'mercadopago'
-require 'will_paginate/array'
 
 Dotenv.load
 

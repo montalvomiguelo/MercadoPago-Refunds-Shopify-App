@@ -10,7 +10,6 @@ class App < Sinatra::Base
 
   set :api_key, ENV['SHOPIFY_API_KEY']
   set :shared_secret, ENV['SHOPIFY_SHARED_SECRET']
-  set :per_page, 30
 
   set :tag_partially_refunded, 'MercadoPago Partially Refunded'
   set :tag_refunded, 'MercadoPago Refunded'
@@ -52,21 +51,12 @@ class App < Sinatra::Base
 
   get '/' do
     shopify_session do
-      #page = params[:page] || 1
-      #total = ShopifyAPI::Order.count
-      #per_page = settings.per_page
-
-      #@orders = ShopifyAPI::Order.find(:all, params: { limit: per_page, page: page })
-
-      #@paged = @orders.paginate(:page => page, :per_page => per_page, :total_entries => total)
-
-      #erb :'orders/index'
-
-      erb :'app', layout: false
+      @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
+      erb :'orders/index'
     end
   end
 
-  get '/orders/:id' do
+  get '/orders' do
     shopify_session do
 
       find_order!

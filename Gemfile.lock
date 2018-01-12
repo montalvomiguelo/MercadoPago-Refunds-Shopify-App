@@ -103,7 +103,6 @@ GEM
     tilt (2.0.8)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
-    will_paginate (3.1.6)
 
 PLATFORMS
   ruby
@@ -130,7 +129,6 @@ DEPENDENCIES
   sinatra
   sinatra-contrib
   sqlite3
-  will_paginate (~> 3.1.0)
 
 RUBY VERSION
    ruby 2.3.4p301

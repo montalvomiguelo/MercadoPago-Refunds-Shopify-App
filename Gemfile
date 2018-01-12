@@ -7,7 +7,6 @@ gem 'omniauth-shopify-oauth2'
 gem "attr_encrypted", "~> 3.0.0"
 gem 'shopify_api'
 gem 'mercadopago-sdk'
-gem 'will_paginate', '~> 3.1.0'
 gem 'omniauth-shopify-oauth2'
 gem 'monetize'
 gem 'puma'
