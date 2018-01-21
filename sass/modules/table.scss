@@ -1,0 +1,29 @@
+table {
+  width: 100%;
+}
+
+th {
+  font-weight: 400;
+}
+
+th,
+td {
+  padding: 8px 10px 7px;
+  border-bottom: 1px solid $color-border;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
+}
+
+tr {
+  &:last-child {
+    > td {
+      border-bottom: none;
+    }
+  }
+}

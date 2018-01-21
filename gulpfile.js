@@ -6,6 +6,7 @@ var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var babelify = require('babelify');
 var watchify = require('watchify');
+var sass = require('gulp-sass');
 
 function bundle(bundler) {
   return bundler
@@ -22,6 +23,12 @@ gulp.task('js', function() {
   return bundle(browserify('./javascript/index.js'));
 });
 
+gulp.task('sass', function() {
+  return gulp.src('./sass/style.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('./public/css'));
+});
+
 gulp.task('watch', function() {
   var watcher = watchify(browserify('./javascript/index.js', watchify.args));
 
@@ -32,4 +39,6 @@ gulp.task('watch', function() {
   });
 
   watcher.on('log', gutil.log);
+
+  gulp.watch('./sass/**/*.scss', ['sass']);
 });
