@@ -1,29 +1,50 @@
-<h4>Orders</h4>
-<table class="u-full-width">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Payment status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @orders.each do |order| %>
-      <tr>
-        <td>
-          <a href="/orders?id=<%= order.id %>">
-            <%= order.name %>
-          </a>
-        </td>
-        <td>
-          <% if order.tag_include?(settings.tag_partially_refunded) %>
-            Partially Refunded
-          <% elsif order.tags_include?(settings.tag_refunded) %>
-            Refunded
-          <% else %>
-            Paid
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="Polaris-Page">
+  <div class="Polaris-Page__Content">
+    <div class="Polaris-Layout">
+      <div class="Polaris-Layout__Section">
+        <div class="Polaris-Banner Polaris-Banner--statusInfo" tabindex="0" role="status" aria-live="polite" aria-labelledby="Banner3Heading" aria-describedby="Banner3Content">
+          <div class="Polaris-Banner__Ribbon"><span class="Polaris-Icon Polaris-Icon--colorTealDark Polaris-Icon--hasBackdrop"><svg class="Polaris-Icon__Svg" viewBox="0 0 20 20"><g fill-rule="evenodd"><circle cx="10" cy="10" r="9" fill="currentColor"></circle><path d="M10 0C4.486 0 0 4.486 0 10s4.486 10 10 10 10-4.486 10-10S15.514 0 10 0m0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8m1-5v-3a1 1 0 0 0-1-1H9a1 1 0 1 0 0 2v3a1 1 0 0 0 1 1h1a1 1 0 1 0 0-2m-1-5.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2"></path></g></svg></span></div>
+          <div>
+            <div class="Polaris-Banner__Content" id="Banner3Content">
+              <p>To refund an order, either select an order from your <a href="#">Orders page</a> or click on one of the recent orders below.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="Polaris-Layout__Section">
+        <div class="Polaris-Card">
+          <div class="Polaris-Card__Section">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Date</th>
+                  <th>Placed by</th>
+                  <th>Payment status</th>
+                  <th>Fulfillment status</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @orders.each do |order| %>
+                  <div style="display: none;"><%= order.inspect %></div>
+                  <tr>
+                    <td>
+                      <a href="/orders?id=<%= order.id %>">
+                        <%= order.name %>
+                      </a>
+                    </td>
+                    <td><%= order.created_at.to_time.strftime('%b %d, %I:%M%p') %></td>
+                    <td><%= %Q{#{order.customer.first_name} #{order.customer.last_name}} %></td>
+                    <td><%= order.financial_status %></td>
+                    <td><%= order.fulfillment_status %></td>
+                    <td><%= %Q{$ #{order.total_price}} %></td>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
