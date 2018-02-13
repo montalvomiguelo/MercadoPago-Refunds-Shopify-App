@@ -1,10 +1,31 @@
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
 }
 
-td,
 th {
-  padding: 0;
+  font-weight: 400;
+}
+
+th,
+td {
+  border-bottom: 1px solid $table-border;
+  padding: 8px 10px 7px;
   text-align: left;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
+}
+
+tr {
+  &:last-child {
+    > td {
+      border-bottom: none;
+    }
+  }
 }

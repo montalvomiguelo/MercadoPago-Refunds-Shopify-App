@@ -1,0 +1,83 @@
+.footer {
+  text-align: right;
+  margin-top: 20px;
+
+  .Polaris-FormLayout {
+    margin-top: 20px;
+  }
+}
+
+.footer-subtotal {
+  color: $color-archived;
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 0;
+
+  > span {
+    color: $color-archived;
+  }
+
+  > em {
+    font-style: normal;
+    width: 100px;
+    padding-left: 10px;
+    color: $color-body-text;
+    font-weight: $header-font-weight;
+  }
+}
+
+.footer-shipping {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 0;
+
+  > span {
+    color: $color-archived;
+  }
+
+  > em {
+    font-style: normal;
+  }
+
+  .input-group {
+    width: 90px;
+    min-width: 90px;
+    margin-left: 10px;
+  }
+
+  input {
+    text-align: right;
+  }
+}
+
+.footer-amount {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px 0 0;
+  border-top: 1px solid $table-border;
+
+  > span {
+    color: $color-archived;
+  }
+
+  .input-group {
+    width: 120px;
+    min-width: 120px;
+    margin-left: 10px;
+  }
+
+  .Polaris-Choice {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+
+  input {
+    text-align: right;
+  }
+}

@@ -1,0 +1,36 @@
+.line-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $table-border;
+  flex-wrap: wrap;
+}
+
+.line-item-title {
+  flex-grow: 1;
+  padding: 20px 10px 20px 0;
+  em {
+    display: block;
+    font-style: normal;
+    color: $color-archived;
+  }
+}
+
+.line-item-price {
+  padding: 20px 10px 20px;
+  flex-basis: 100px;
+}
+
+.line-item-times {
+  padding: 20px 10px 20px;
+}
+
+.line-item-qty {
+  flex-basis: 81px;
+  padding: 20px 0 20px 10px;
+}
+
+.line-item-line-price {
+  flex-basis: 100px;
+  padding: 20px 0 20px 10px;
+  text-align: right;
+}

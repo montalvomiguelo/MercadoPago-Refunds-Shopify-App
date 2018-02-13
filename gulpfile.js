@@ -7,6 +7,7 @@ var browserify = require('browserify');
 var babelify = require('babelify');
 var watchify = require('watchify');
 var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
 
 function bundle(bundler) {
   return bundler
@@ -26,6 +27,9 @@ gulp.task('js', function() {
 gulp.task('sass', function() {
   return gulp.src('./sass/style.scss')
     .pipe(sass.sync().on('error', sass.logError))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions', 'ie >= 9']
+    }))
     .pipe(gulp.dest('./public/css'));
 });
 
