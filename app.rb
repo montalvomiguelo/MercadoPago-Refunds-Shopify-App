@@ -56,10 +56,19 @@ class App < Sinatra::Base
 
   get '/orders' do
     shopify_session do
+      erb :app, layout: false
+    end
+  end
+
+  get '/orders/:id' do
+    shopify_session do
 
       find_order!
 
-      erb :'orders/show'
+      @order.total_refund = @order.total_refund
+
+      json @order
+      #erb :'orders/show'
     end
   end
 
