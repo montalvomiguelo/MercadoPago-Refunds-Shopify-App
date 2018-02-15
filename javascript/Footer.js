@@ -16,7 +16,7 @@ function Footer(props) {
   return (
     <div className="footer">
       <Amount title="Subtotal" price={props.subtotal} />
-      <Shipping cost={props.shipping} remainingShipping={props.remainingShipping} />
+      <Shipping cost={props.shipping} maximumRefundable={props.maximumRefundable} />
       <Amount title="Discounts" price={props.discount} />
       <Amount title="Tax" price={0.00} />
       <Amount title="Total available to refund" price={props.totalAvailableToRefund} />
@@ -42,7 +42,7 @@ Footer.propTypes = {
   discount: PropTypes.number.isRequired,
   totalAvailableToRefund: PropTypes.number.isRequired,
   refundAmount: PropTypes.number.isRequired,
-  remainingShipping: PropTypes.number.isRequired
+  maximumRefundable: PropTypes.string.isRequired
 };
 
 export default Footer;

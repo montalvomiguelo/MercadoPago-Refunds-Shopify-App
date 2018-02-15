@@ -27,7 +27,7 @@ function Order(props) {
             discount={props.discount}
             totalAvailableToRefund={props.totalAvailableToRefund}
             refundAmount={props.refundAmount}
-            remainingShipping={props.remainingShipping}
+            maximumRefundable={props.maximumRefundable}
           />
         </Card>
       </Layout.Section>
@@ -41,6 +41,7 @@ function Order(props) {
           country={props.country}
           currency={props.currency}
           totalPrice={props.totalPrice}
+          financialStatus={props.financialStatus}
         />
       </Layout.Section>
     </Layout>
@@ -61,7 +62,8 @@ Order.propTypes = {
   country: PropTypes.string.isRequired,
   totalPrice: PropTypes.string.isRequired,
   currency: PropTypes.string.isRequired,
-  remainingShipping: PropTypes.number.isRequired
+  maximumRefundable: PropTypes.string.isRequired,
+  financialStatus: PropTypes.string.isRequired
 };
 
 export default Order;

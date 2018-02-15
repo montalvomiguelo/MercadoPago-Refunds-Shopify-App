@@ -8,6 +8,7 @@ import Order from './Order';
 
 import axios from 'axios';
 import _ from 'lodash';
+import qs from 'qs';
 
 import numeral from 'numeral';
 
@@ -28,9 +29,10 @@ class App extends Component {
       province: '',
       zip: '',
       country: '',
-      totalPrice: '',
+      totalPrice: '0',
       currency: '',
-      remainingShipping: 0
+      maximumRefundable: '0',
+      financialStatus: ''
     };
   }
 
@@ -94,8 +96,6 @@ class App extends Component {
 
         console.dir(data);
 
-        const remainingShipping = this.remainingShippingInOrderInOrder(data);
-
         const totalAvailableToRefund = this.availableToRefundInOrder(data);
 
         const name = data.billing_address.name;
@@ -114,10 +114,11 @@ class App extends Component {
 
         const currency = data.currency;
 
+        const financialStatus = data.financial_status;
+
         this.setState({
           lineItems: data.line_items,
           orderName: data.name,
-          remainingShipping: remainingShipping,
           totalAvailableToRefund: totalAvailableToRefund,
           name: name,
           address: address,
@@ -126,11 +127,27 @@ class App extends Component {
           zip: zip,
           country: country,
           totalPrice: totalPrice,
-          currency: currency
+          currency: currency,
+          financialStatus: financialStatus
         });
+
+        return axios.post(`/orders/${orderId}/refunds/calculate`, qs.stringify({
+          refund: {
+            refund_line_items: [],
+            shipping: {
+              amount: 0
+            }
+          }
+        }));
       })
-      .catch(error => {
-        console.log(error);
+      .then(response => {
+        const data = response.data;
+
+        console.dir(data);
+
+        this.setState({
+          maximumRefundable: data.shipping.maximum_refundable
+        });
       });
   }
 
@@ -164,7 +181,8 @@ class App extends Component {
             country={this.state.country}
             totalPrice={this.state.totalPrice}
             currency={this.state.currency}
-            remainingShipping={this.state.remainingShipping}
+            maximumRefundable={this.state.maximumRefundable}
+            financialStatus={this.state.financialStatus}
           />
         </Page>
       </EmbeddedApp>

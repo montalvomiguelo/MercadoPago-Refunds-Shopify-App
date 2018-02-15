@@ -7,7 +7,7 @@ import InputGroup from './InputGroup';
 function Shipping(props) {
   return (
     <div className="footer-shipping">
-      <span>Shipping ($ {props.remainingShipping} remaining)</span>
+      <span>Shipping ($ {props.maximumRefundable} remaining)</span>
       <InputGroup append="$" value={props.cost} />
     </div>
   );
@@ -15,7 +15,7 @@ function Shipping(props) {
 
 Shipping.propTypes = {
   cost: PropTypes.number.isRequired,
-  remainingShipping: PropTypes.number.isRequired
+  maximumRefundable: PropTypes.string.isRequired
 };
 
 export default Shipping;

@@ -88,7 +88,8 @@ class App < Sinatra::Base
         halt 422, 'Invalid refund'
       end
 
-      erb :'orders/refund'
+      #erb :'orders/refund'
+      json @refund
     end
   end
 
