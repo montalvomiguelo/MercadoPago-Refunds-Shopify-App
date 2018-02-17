@@ -18,7 +18,7 @@ function Footer(props) {
       <Amount title="Subtotal" price={props.subtotal} />
       <Shipping cost={props.shipping} maximumRefundable={props.maximumRefundable} />
       <Amount title="Discounts" price={props.discount} />
-      <Amount title="Tax" price={0.00} />
+      <Amount title="Tax" price={props.tax} />
       <Amount title="Total available to refund" price={props.totalAvailableToRefund} />
       <FooterAmount amount={props.refundAmount} />
       <Checkbox
@@ -42,7 +42,8 @@ Footer.propTypes = {
   discount: PropTypes.number.isRequired,
   totalAvailableToRefund: PropTypes.number.isRequired,
   refundAmount: PropTypes.number.isRequired,
-  maximumRefundable: PropTypes.string.isRequired
+  maximumRefundable: PropTypes.string.isRequired,
+  tax: PropTypes.number.isRequired
 };
 
 export default Footer;

@@ -30,9 +30,10 @@ class App extends Component {
       country: '',
       totalPrice: '0',
       currency: '',
-      maximumRefundable: '0',
+      maximumRefundable: '0.00',
       financialStatus: '',
-      taxesIncluded: false
+      taxesIncluded: false,
+      tax: 0
     };
   }
 
@@ -166,16 +167,28 @@ class App extends Component {
       });
   }
 
+  calculateRefundTax(refund) {
+    const tax = _.reduce(refund.refund_line_items, (sum, line) => {
+      return numeral(sum).add(line.total_tax);
+    }, 0);
+
+    return numeral(tax).value();
+  }
+
+  calculateRefundDiscount(refund) {
+    const discount = _.reduce(refund.refund_line_items, (sum, line) => {
+      return numeral(sum).add(line.total_cart_discount_amount);
+    }, 0);
+
+    return numeral(discount).value();
+  }
+
   calculateRefundSubtotal(refund) {
     const subtotal = _.reduce(refund.refund_line_items, (sum, line) => {
       return numeral(sum).add(line.price);
     }, 0);
 
-    if (subtotal == 0) {
-      return subtotal;
-    }
-
-    return subtotal.value();
+    return numeral(subtotal).value();
   }
 
   onChangeQty(value, id) {
@@ -196,6 +209,8 @@ class App extends Component {
       lineItem.linePrice = (item) ? item.subtotal : '0.00';
       console.dir(data);
       this.state.subtotal = this.calculateRefundSubtotal(data);
+      this.state.discount = this.calculateRefundDiscount(data);
+      this.state.tax = this.calculateRefundTax(data);
       this.setState(this.state);
     }));
   }
@@ -233,6 +248,7 @@ class App extends Component {
             maximumRefundable={this.state.maximumRefundable}
             financialStatus={this.state.financialStatus}
             onChangeQty={this.onChangeQty.bind(this)}
+            tax={this.state.tax}
           />
         </Page>
       </EmbeddedApp>
