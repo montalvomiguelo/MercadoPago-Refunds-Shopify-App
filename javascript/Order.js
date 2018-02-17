@@ -20,7 +20,10 @@ function Order(props) {
           title="Refund payments"
           sectioned
         >
-          <LineItems items={props.lineItems} />
+          <LineItems
+            items={props.lineItems}
+            onChangeQty={props.onChangeQty}
+          />
           <Footer
             subtotal={props.subtotal}
             shipping={props.shipping}
@@ -63,7 +66,8 @@ Order.propTypes = {
   totalPrice: PropTypes.string.isRequired,
   currency: PropTypes.string.isRequired,
   maximumRefundable: PropTypes.string.isRequired,
-  financialStatus: PropTypes.string.isRequired
+  financialStatus: PropTypes.string.isRequired,
+  onChangeQty: PropTypes.func.isRequired
 };
 
 export default Order;

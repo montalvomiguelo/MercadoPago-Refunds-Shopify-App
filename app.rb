@@ -75,15 +75,15 @@ class App < Sinatra::Base
   post '/orders/:id/refunds/calculate' do
     shopify_session do
 
+      request.body.rewind
+      request_payload = request.body.read
+
       find_order!
 
-      data = {
-        :shipping => { :amount => params[:refund][:shipping][:amount] },
-        :refund_line_items => params[:refund][:refund_line_items]
-      }
+      data = JSON.parse(request_payload)
 
       begin
-        @refund = ShopifyAPI::Refund.calculate(data, :params => {:order_id => params[:id]})
+        @refund = ShopifyAPI::Refund.calculate(data['refund'], :params => {:order_id => params[:id]})
       rescue ActiveResource::ResourceInvalid => e
         halt 422, 'Invalid refund'
       end

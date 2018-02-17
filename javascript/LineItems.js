@@ -8,7 +8,7 @@ function LineItems(props) {
   return (
     <ul className="line-items">
       {props.items.map(item => (
-        <li key={item.id} className="line-item">
+        <li key={item.line_item_id} className="line-item">
           <p className="line-item-title">
             {item.title}
             <em>{item.variant_title}</em>
@@ -18,10 +18,12 @@ function LineItems(props) {
           <div className="line-item-qty">
             <TextField
               type="number"
-              value="0"
+              value={item.quantity}
+              onChange={(value) => props.onChangeQty(value, item.line_item_id)}
+              min={0}
             />
           </div>
-          <span className="line-item-line-price">$ 0.00</span>
+          <span className="line-item-line-price">$ {item.linePrice}</span>
         </li>
       ))}
     </ul>
@@ -29,7 +31,8 @@ function LineItems(props) {
 }
 
 LineItems.propTypes = {
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  onChangeQty: PropTypes.func.isRequired
 };
 
 export default LineItems;

@@ -8,7 +8,6 @@ import Order from './Order';
 
 import axios from 'axios';
 import _ from 'lodash';
-import qs from 'qs';
 
 import numeral from 'numeral';
 
@@ -32,7 +31,8 @@ class App extends Component {
       totalPrice: '0',
       currency: '',
       maximumRefundable: '0',
-      financialStatus: ''
+      financialStatus: '',
+      taxesIncluded: false
     };
   }
 
@@ -87,6 +87,19 @@ class App extends Component {
     return totalPrice.subtract(order.total_refund.fractional).value();
   }
 
+  orderLineItems(order) {
+    return _.map(order.line_items, (item) => {
+      return {
+        line_item_id: item.id,
+        quantity: 0,
+        title: item.title,
+        variant_title: item.variant_title,
+        price: item.price,
+        linePrice: '0.00'
+      };
+    });
+  }
+
   componentDidMount() {
     const orderId = this.getUrlParameter('id');
 
@@ -116,8 +129,10 @@ class App extends Component {
 
         const financialStatus = data.financial_status;
 
+        const lineItems = this.orderLineItems(data);
+
         this.setState({
-          lineItems: data.line_items,
+          lineItems: lineItems,
           orderName: data.name,
           totalAvailableToRefund: totalAvailableToRefund,
           name: name,
@@ -128,17 +143,17 @@ class App extends Component {
           country: country,
           totalPrice: totalPrice,
           currency: currency,
-          financialStatus: financialStatus
+          financialStatus: financialStatus,
+          taxesIncluded: data.taxes_included
         });
 
-        return axios.post(`/orders/${orderId}/refunds/calculate`, qs.stringify({
+        return axios.post(`/orders/${orderId}/refunds/calculate`, {
           refund: {
-            refund_line_items: [],
             shipping: {
-              amount: 0
+              amount: this.state.shipping
             }
           }
-        }));
+        });
       })
       .then(response => {
         const data = response.data;
@@ -149,6 +164,40 @@ class App extends Component {
           maximumRefundable: data.shipping.maximum_refundable
         });
       });
+  }
+
+  calculateRefundSubtotal(refund) {
+    const subtotal = _.reduce(refund.refund_line_items, (sum, line) => {
+      return numeral(sum).add(line.price);
+    }, 0);
+
+    if (subtotal == 0) {
+      return subtotal;
+    }
+
+    return subtotal.value();
+  }
+
+  onChangeQty(value, id) {
+    const lineItem = _.find(this.state.lineItems, {line_item_id: id});
+    lineItem.quantity = value;
+    this.setState(this.state);
+
+    const orderId = this.getUrlParameter('id');
+
+    axios.post(`/orders/${orderId}/refunds/calculate`, {
+      refund: {
+        refund_line_items: this.state.lineItems
+      }
+    })
+    .then((response => {
+      const data = response.data;
+      const item = _.find(data.refund_line_items, {line_item_id: id});
+      lineItem.linePrice = (item) ? item.subtotal : '0.00';
+      console.dir(data);
+      this.state.subtotal = this.calculateRefundSubtotal(data);
+      this.setState(this.state);
+    }));
   }
 
   render() {
@@ -183,6 +232,7 @@ class App extends Component {
             currency={this.state.currency}
             maximumRefundable={this.state.maximumRefundable}
             financialStatus={this.state.financialStatus}
+            onChangeQty={this.onChangeQty.bind(this)}
           />
         </Page>
       </EmbeddedApp>
