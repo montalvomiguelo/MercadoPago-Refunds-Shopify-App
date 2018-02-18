@@ -21,7 +21,7 @@ class App extends Component {
       shipping: '0',
       discount: 0,
       totalAvailableToRefund: 0,
-      refundAmount: 0,
+      refundAmount: '0',
       name: '',
       address: '',
       city: '',
@@ -34,6 +34,7 @@ class App extends Component {
       financialStatus: '',
       taxesIncluded: false,
       tax: 0,
+      restock: true
     };
   }
 
@@ -191,6 +192,10 @@ class App extends Component {
     return numeral(subtotal).value();
   }
 
+  handleInputChange(field) {
+    return (value) => this.setState({[field]: value});
+  }
+
   onChangeShipping(value, id) {
     this.state.shipping = value;
     this.setState(this.state);
@@ -214,12 +219,24 @@ class App extends Component {
       const tax = numeral(taxLines).add(shippingTax);
 
       this.state.tax = tax.value();
+      this.state.refundAmount = this.calculateRefundAmount().toString();
       this.setState(this.state);
     });
   }
 
-  onChangeAmount(value, id) {
-    console.log('onChangeAmount', value);
+  calculateRefundAmount() {
+    const sum = numeral(0);
+
+    sum.add(this.state.subtotal);
+    sum.add(this.state.shipping);
+
+    sum.subtract(this.state.discount);
+
+    if (!this.state.taxesIncluded) {
+      sum.add(this.state.tax);
+    }
+
+    return sum.value();
   }
 
   onChangeQty(value, id) {
@@ -254,6 +271,7 @@ class App extends Component {
       this.state.subtotal = subtotal;
       this.state.discount = discount;
       this.state.tax = tax.value();
+      this.state.refundAmount = this.calculateRefundAmount().toString();
       this.setState(this.state);
     }));
   }
@@ -293,7 +311,9 @@ class App extends Component {
             onChangeQty={this.onChangeQty.bind(this)}
             tax={this.state.tax}
             onChangeShipping={this.onChangeShipping.bind(this)}
-            onChangeAmount={this.onChangeAmount.bind(this)}
+            onChangeAmount={this.handleInputChange('refundAmount')}
+            onChangeRestock={this.handleInputChange('restock')}
+            restock={this.state.restock}
           />
         </Page>
       </EmbeddedApp>

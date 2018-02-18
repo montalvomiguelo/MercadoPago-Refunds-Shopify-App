@@ -34,6 +34,8 @@ function Order(props) {
             tax={props.tax}
             onChangeShipping={props.onChangeShipping}
             onChangeAmount={props.onChangeAmount}
+            onChangeRestock={props.onChangeRestock}
+            restock={props.restock}
           />
         </Card>
       </Layout.Section>
@@ -59,7 +61,7 @@ Order.propTypes = {
   subtotal: PropTypes.number.isRequired,
   discount: PropTypes.number.isRequired,
   totalAvailableToRefund: PropTypes.number.isRequired,
-  refundAmount: PropTypes.number.isRequired,
+  refundAmount: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   address: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
@@ -74,7 +76,9 @@ Order.propTypes = {
   tax: PropTypes.number.isRequired,
   onChangeShipping: PropTypes.func.isRequired,
   onChangeAmount: PropTypes.func.isRequired,
-  shipping: PropTypes.string.isRequired
+  shipping: PropTypes.string.isRequired,
+  onChangeRestock: PropTypes.func.isRequired,
+  restock: PropTypes.bool.isRequired
 };
 
 export default Order;
