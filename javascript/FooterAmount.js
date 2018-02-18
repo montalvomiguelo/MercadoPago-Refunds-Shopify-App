@@ -8,13 +8,18 @@ function FooterAmount(props) {
   return (
     <div className="footer-amount">
       <span>Refund amount</span>
-      <InputGroup append="$" value={props.amount} />
+      <InputGroup
+        append="$"
+        value={props.amount}
+        onChange={props.onChangeAmount}
+      />
     </div>
   );
 }
 
 FooterAmount.propTypes = {
-  amount: PropTypes.number.isRequired
+  amount: PropTypes.number.isRequired,
+  onChangeAmount: PropTypes.func.isRequired
 };
 
 export default FooterAmount;

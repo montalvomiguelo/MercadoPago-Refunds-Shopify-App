@@ -16,11 +16,18 @@ function Footer(props) {
   return (
     <div className="footer">
       <Amount title="Subtotal" price={props.subtotal} />
-      <Shipping cost={props.shipping} maximumRefundable={props.maximumRefundable} />
+      <Shipping
+        shipping={props.shipping}
+        maximumRefundable={props.maximumRefundable}
+        onChangeShipping={props.onChangeShipping}
+      />
       <Amount title="Discounts" price={props.discount} />
       <Amount title="Tax" price={props.tax} />
       <Amount title="Total available to refund" price={props.totalAvailableToRefund} />
-      <FooterAmount amount={props.refundAmount} />
+      <FooterAmount
+        amount={props.refundAmount}
+        onChangeAmount={props.onChangeAmount}
+      />
       <Checkbox
         label="Restock"
         checked
@@ -38,12 +45,14 @@ function Footer(props) {
 
 Footer.propTypes = {
   subtotal: PropTypes.number.isRequired,
-  shipping: PropTypes.number.isRequired,
+  shipping: PropTypes.string.isRequired,
   discount: PropTypes.number.isRequired,
   totalAvailableToRefund: PropTypes.number.isRequired,
   refundAmount: PropTypes.number.isRequired,
   maximumRefundable: PropTypes.string.isRequired,
-  tax: PropTypes.number.isRequired
+  tax: PropTypes.number.isRequired,
+  onChangeShipping: PropTypes.func.isRequired,
+  onChangeAmount: PropTypes.func.isRequired
 };
 
 export default Footer;

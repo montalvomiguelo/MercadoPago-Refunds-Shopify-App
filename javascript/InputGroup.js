@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { TextField } from '@shopify/polaris';
 
 function InputGroup(props) {
@@ -7,11 +9,16 @@ function InputGroup(props) {
     <div className="input-group">
       <span className="input-group-append">{props.append}</span>
       <TextField
-        type="text"
+        type="number"
         value={props.value}
+        onChange={props.onChange}
       />
     </div>
   );
+}
+
+InputGroup.propTypes = {
+  onChange: PropTypes.func.isRequired
 }
 
 export default InputGroup;

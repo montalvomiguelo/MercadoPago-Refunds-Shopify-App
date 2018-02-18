@@ -32,6 +32,8 @@ function Order(props) {
             refundAmount={props.refundAmount}
             maximumRefundable={props.maximumRefundable}
             tax={props.tax}
+            onChangeShipping={props.onChangeShipping}
+            onChangeAmount={props.onChangeAmount}
           />
         </Card>
       </Layout.Section>
@@ -69,7 +71,10 @@ Order.propTypes = {
   maximumRefundable: PropTypes.string.isRequired,
   financialStatus: PropTypes.string.isRequired,
   onChangeQty: PropTypes.func.isRequired,
-  tax: PropTypes.number.isRequired
+  tax: PropTypes.number.isRequired,
+  onChangeShipping: PropTypes.func.isRequired,
+  onChangeAmount: PropTypes.func.isRequired,
+  shipping: PropTypes.string.isRequired
 };
 
 export default Order;

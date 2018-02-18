@@ -18,7 +18,7 @@ class App extends Component {
       orderName: '',
       lineItems: [],
       subtotal: 0,
-      shipping: 0,
+      shipping: '0',
       discount: 0,
       totalAvailableToRefund: 0,
       refundAmount: 0,
@@ -33,7 +33,7 @@ class App extends Component {
       maximumRefundable: '0.00',
       financialStatus: '',
       taxesIncluded: false,
-      tax: 0
+      tax: 0,
     };
   }
 
@@ -167,7 +167,7 @@ class App extends Component {
       });
   }
 
-  calculateRefundTax(refund) {
+  calculateTaxLines(refund) {
     const tax = _.reduce(refund.refund_line_items, (sum, line) => {
       return numeral(sum).add(line.total_tax);
     }, 0);
@@ -191,6 +191,37 @@ class App extends Component {
     return numeral(subtotal).value();
   }
 
+  onChangeShipping(value, id) {
+    this.state.shipping = value;
+    this.setState(this.state);
+
+    const orderId = this.getUrlParameter('id');
+
+    axios.post(`/orders/${orderId}/refunds/calculate`, {
+      refund: {
+        refund_line_items: this.state.lineItems,
+        shipping: {
+          amount: this.state.shipping
+        }
+      }
+    })
+    .then(response => {
+      const data = response.data;
+
+      const taxLines = this.calculateTaxLines(data);
+      const shippingTax = response.data.shipping.tax;
+
+      const tax = numeral(taxLines).add(shippingTax);
+
+      this.state.tax = tax.value();
+      this.setState(this.state);
+    });
+  }
+
+  onChangeAmount(value, id) {
+    console.log('onChangeAmount', value);
+  }
+
   onChangeQty(value, id) {
     const lineItem = _.find(this.state.lineItems, {line_item_id: id});
     lineItem.quantity = value;
@@ -200,17 +231,29 @@ class App extends Component {
 
     axios.post(`/orders/${orderId}/refunds/calculate`, {
       refund: {
-        refund_line_items: this.state.lineItems
+        refund_line_items: this.state.lineItems,
+        shipping: {
+          amount: this.state.shipping
+        }
       }
     })
     .then((response => {
       const data = response.data;
       const item = _.find(data.refund_line_items, {line_item_id: id});
+
       lineItem.linePrice = (item) ? item.subtotal : '0.00';
-      console.dir(data);
-      this.state.subtotal = this.calculateRefundSubtotal(data);
-      this.state.discount = this.calculateRefundDiscount(data);
-      this.state.tax = this.calculateRefundTax(data);
+
+      const taxLines = this.calculateTaxLines(data);
+      const shippingTax = response.data.shipping.tax;
+
+      const tax = numeral(taxLines).add(shippingTax);
+
+      const subtotal = this.calculateRefundSubtotal(data);
+      const discount = this.calculateRefundDiscount(data);
+
+      this.state.subtotal = subtotal;
+      this.state.discount = discount;
+      this.state.tax = tax.value();
       this.setState(this.state);
     }));
   }
@@ -249,6 +292,8 @@ class App extends Component {
             financialStatus={this.state.financialStatus}
             onChangeQty={this.onChangeQty.bind(this)}
             tax={this.state.tax}
+            onChangeShipping={this.onChangeShipping.bind(this)}
+            onChangeAmount={this.onChangeAmount.bind(this)}
           />
         </Page>
       </EmbeddedApp>
