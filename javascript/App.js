@@ -52,17 +52,49 @@ class App extends Component {
     return totalPrice.subtract(order.total_refund).value();
   }
 
-  orderLineItems(order) {
-    return _.map(order.line_items, (item) => {
+  mapLineItems(lineItems) {
+    return _.map(lineItems, (item) => {
       return {
         line_item_id: item.id,
         quantity: 0,
         title: item.title,
         variant_title: item.variant_title,
         price: item.price,
-        linePrice: '0.00'
+        linePrice: '0.00',
+        lineQty: item.quantity
       };
     });
+  }
+
+  orderLineItems(order) {
+    let lineItems = this.mapLineItems(order.line_items);
+    return lineItems;
+  }
+
+  updateRefundLineItems(lineItems, refunds) {
+    return _.map(lineItems, (item) => {
+      item.refund = this.refundsForItem(refunds, item);
+      return item;
+    });
+  }
+
+  refundsForItem(refunds, item) {
+    const refundsWithItem = this.refundsWithItem(refunds, item);
+    const refundLinesForItem = this.refundLinesForItem(refundsWithItem, item);
+
+    return _.reduce(refundLinesForItem, (sum, line) => sum + line.quantity, 0);
+  }
+
+  refundsWithItem(refunds, item) {
+    return _.filter(refunds, (refund) => {
+      if(_.find(refund.refund_line_items, {line_item_id: item.line_item_id})) {
+        return refund;
+      }
+    });
+  }
+
+  refundLinesForItem(refundsWithItem, item) {
+    return _.flatMap(refundsWithItem, (refund) => refund.refund_line_items, {line_item_id: item.line_item_id});
   }
 
   componentDidMount() {
@@ -93,6 +125,8 @@ class App extends Component {
         const financialStatus = data.financial_status;
 
         const lineItems = this.orderLineItems(data);
+
+        this.updateRefundLineItems(lineItems, data.refunds);
 
         this.setState({
           lineItems: lineItems,

@@ -21,6 +21,7 @@ function LineItems(props) {
               value={item.quantity}
               onChange={(value) => props.onChangeQty(value, item.line_item_id)}
               min={0}
+              disabled={(item.refund >= item.lineQty) ? true : false}
             />
           </div>
           <span className="line-item-line-price">$ {item.linePrice}</span>
