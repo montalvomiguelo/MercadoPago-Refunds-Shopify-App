@@ -26,6 +26,10 @@ function BillingShipping(props) {
         </p>
         <br />
         <p>
+          Refunded: $ {props.totalRefund} {props.currency}
+        </p>
+        <br />
+        <p>
           Payment status: <Badge>{props.financialStatus}</Badge>
         </p>
       </Card.Section>
@@ -41,6 +45,7 @@ BillingShipping.propTypes = {
   zip: PropTypes.string.isRequired,
   country: PropTypes.string.isRequired,
   totalPrice: PropTypes.string.isRequired,
+  totalRefund: PropTypes.string.isRequired,
   currency: PropTypes.string.isRequired,
   financialStatus: PropTypes.string.isRequired
 };

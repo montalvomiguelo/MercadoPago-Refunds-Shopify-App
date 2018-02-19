@@ -54,6 +54,7 @@ function Order(props) {
           currency={props.currency}
           totalPrice={props.totalPrice}
           financialStatus={props.financialStatus}
+          totalRefund={props.totalRefund}
         />
       </Layout.Section>
     </Layout>
@@ -86,7 +87,8 @@ Order.propTypes = {
   note: PropTypes.string.isRequired,
   onChangeNote: PropTypes.func.isRequired,
   notify: PropTypes.bool.isRequired,
-  onChangeNotify: PropTypes.func.isRequired
+  onChangeNotify: PropTypes.func.isRequired,
+  totalRefund: PropTypes.string.isRequired
 };
 
 export default Order;

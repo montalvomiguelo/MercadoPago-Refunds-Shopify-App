@@ -36,7 +36,8 @@ class App extends Component {
       tax: 0,
       restock: true,
       note: '',
-      notify: true
+      notify: true,
+      totalRefund: ''
     };
   }
 
@@ -141,7 +142,8 @@ class App extends Component {
           totalPrice: totalPrice,
           currency: currency,
           financialStatus: financialStatus,
-          taxesIncluded: data.taxes_included
+          taxesIncluded: data.taxes_included,
+          totalRefund: data.total_refund
         });
 
         return axios.post(`/orders/${orderId}/refunds/calculate`, {
@@ -238,12 +240,13 @@ class App extends Component {
         refundAmount: '0',
         subtotal: 0,
         discount: 0,
-        shipping: 0,
+        shipping: '0',
         tax: 0,
         note: '',
         lineItems: lineItems,
         totalAvailableToRefund: totalAvailableToRefund,
         financialStatus: financialStatus,
+        totalRefund: data.total_refund
       });
     });
   }
@@ -357,6 +360,7 @@ class App extends Component {
             onChangeNote={this.handleInputChange('note')}
             notify={this.state.notify}
             onChangeNotify={this.handleInputChange('notify')}
+            totalRefund={this.state.totalRefund}
           />
         </Page>
       </EmbeddedApp>
