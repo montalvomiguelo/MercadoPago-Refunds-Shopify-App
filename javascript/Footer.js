@@ -41,7 +41,14 @@ function Footer(props) {
       <FormLayout>
         <TextField
           type="text"
+          value={props.note}
           label="Reason for refund (optional)"
+          onChange={props.onChangeNote}
+        />
+        <Checkbox
+          label="Send a notification to the customer"
+          checked={props.notify}
+          onChange={props.onChangeNotify}
         />
       </FormLayout>
     </div>
@@ -59,7 +66,11 @@ Footer.propTypes = {
   onChangeShipping: PropTypes.func.isRequired,
   onChangeAmount: PropTypes.func.isRequired,
   onChangeRestock: PropTypes.func.isRequired,
-  restock: PropTypes.bool.isRequired
+  restock: PropTypes.bool.isRequired,
+  note: PropTypes.string.isRequired,
+  onChangeNote: PropTypes.func.isRequired,
+  notify: PropTypes.bool.isRequired,
+  onChangeNotify: PropTypes.func.isRequired
 };
 
 export default Footer;

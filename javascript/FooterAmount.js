@@ -18,7 +18,7 @@ function FooterAmount(props) {
 }
 
 FooterAmount.propTypes = {
-  amount: PropTypes.number.isRequired,
+  amount: PropTypes.string.isRequired,
   onChangeAmount: PropTypes.func.isRequired
 };
 

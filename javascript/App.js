@@ -34,7 +34,9 @@ class App extends Component {
       financialStatus: '',
       taxesIncluded: false,
       tax: 0,
-      restock: true
+      restock: true,
+      note: '',
+      notify: true
     };
   }
 
@@ -314,6 +316,10 @@ class App extends Component {
             onChangeAmount={this.handleInputChange('refundAmount')}
             onChangeRestock={this.handleInputChange('restock')}
             restock={this.state.restock}
+            note={this.state.note}
+            onChangeNote={this.handleInputChange('note')}
+            notify={this.state.notify}
+            onChangeNotify={this.handleInputChange('notify')}
           />
         </Page>
       </EmbeddedApp>

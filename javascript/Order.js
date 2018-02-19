@@ -36,6 +36,10 @@ function Order(props) {
             onChangeAmount={props.onChangeAmount}
             onChangeRestock={props.onChangeRestock}
             restock={props.restock}
+            note={props.note}
+            onChangeNote={props.onChangeNote}
+            notify={props.notify}
+            onChangeNotify={props.onChangeNotify}
           />
         </Card>
       </Layout.Section>
@@ -78,7 +82,11 @@ Order.propTypes = {
   onChangeAmount: PropTypes.func.isRequired,
   shipping: PropTypes.string.isRequired,
   onChangeRestock: PropTypes.func.isRequired,
-  restock: PropTypes.bool.isRequired
+  restock: PropTypes.bool.isRequired,
+  note: PropTypes.string.isRequired,
+  onChangeNote: PropTypes.func.isRequired,
+  notify: PropTypes.bool.isRequired,
+  onChangeNotify: PropTypes.func.isRequired
 };
 
 export default Order;
