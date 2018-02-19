@@ -220,7 +220,31 @@ class App extends Component {
       }
     })
     .then(response => {
-      console.log(response.data);
+      ShopifyApp.flashNotice('Refund created successfully');
+      return axios.get(`/orders/${orderId}`)
+    })
+    .then(response => {
+      const data = response.data;
+
+      const totalAvailableToRefund = this.availableToRefundInOrder(data);
+
+      const financialStatus = data.financial_status;
+
+      const lineItems = this.orderLineItems(data);
+
+      this.updateRefundLineItems(lineItems, data.refunds);
+
+      this.setState({
+        refundAmount: '0',
+        subtotal: 0,
+        discount: 0,
+        shipping: 0,
+        tax: 0,
+        note: '',
+        lineItems: lineItems,
+        totalAvailableToRefund: totalAvailableToRefund,
+        financialStatus: financialStatus,
+      });
     });
   }
 
