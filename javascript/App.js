@@ -47,45 +47,6 @@ class App extends Component {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
-  filterShippingRefunds(refunds) {
-    const shippingRefunds = _.filter(refunds, refund => {
-      return _.some(refund.order_adjustments, {kind: 'shipping_refund'});
-    });
-
-    return shippingRefunds;
-  }
-
-  shippingAdjustments(shippingRefunds) {
-    const shippingAdjustments = _.map(shippingRefunds, refund => {
-      return _.find(refund.order_adjustments, {kind: 'refund_discrepancy'});
-    });
-
-    return shippingAdjustments;
-  }
-
-  totalShippingLines(shippingLines) {
-    return _.reduce(shippingLines, (sum, line) => {
-      return numeral(sum).add(line.price).value();
-    }, 0);
-  }
-
-  totalShippingAdjustments(shippingAdjustments) {
-    return _.reduce(shippingAdjustments, (sum, adjustment) => {
-      return numeral(sum).add(adjustment.amount).value();
-    }, 0);
-  }
-
-  remainingShippingInOrderInOrder(order) {
-    const shippingRefunds = this.filterShippingRefunds(order.refunds);
-    const shippingAdjustments = this.shippingAdjustments(shippingRefunds);
-    const totalShippingLines = this.totalShippingLines(order.shipping_lines);
-    const totalShippingAdjustments = this.totalShippingAdjustments(shippingAdjustments);
-
-    const difference = numeral(totalShippingLines).subtract(totalShippingAdjustments).value();
-
-    return (difference > 0) ? difference : 0;
-  }
-
   availableToRefundInOrder(order) {
     const totalPrice = numeral(order.total_price);
     return totalPrice.subtract(order.total_refund).value();
@@ -110,8 +71,6 @@ class App extends Component {
     axios.get(`/orders/${orderId}`)
       .then(response => {
         const data = response.data;
-
-        console.dir(data);
 
         const totalAvailableToRefund = this.availableToRefundInOrder(data);
 
@@ -162,8 +121,6 @@ class App extends Component {
       .then(response => {
         const data = response.data;
 
-        console.dir(data);
-
         this.setState({
           maximumRefundable: data.shipping.maximum_refundable
         });
@@ -192,6 +149,21 @@ class App extends Component {
     }, 0);
 
     return numeral(subtotal).value();
+  }
+
+  calculateRefundAmount() {
+    const sum = numeral(0);
+
+    sum.add(this.state.subtotal);
+    sum.add(this.state.shipping);
+
+    sum.subtract(this.state.discount);
+
+    if (!this.state.taxesIncluded) {
+      sum.add(this.state.tax);
+    }
+
+    return sum.value();
   }
 
   handleInputChange(field) {
@@ -224,21 +196,6 @@ class App extends Component {
       this.state.refundAmount = this.calculateRefundAmount().toString();
       this.setState(this.state);
     });
-  }
-
-  calculateRefundAmount() {
-    const sum = numeral(0);
-
-    sum.add(this.state.subtotal);
-    sum.add(this.state.shipping);
-
-    sum.subtract(this.state.discount);
-
-    if (!this.state.taxesIncluded) {
-      sum.add(this.state.tax);
-    }
-
-    return sum.value();
   }
 
   onChangeQty(value, id) {
