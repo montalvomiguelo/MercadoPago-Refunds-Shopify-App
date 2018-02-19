@@ -170,6 +170,26 @@ class App extends Component {
     return (value) => this.setState({[field]: value});
   }
 
+  newRefundSubmit() {
+    const orderId = this.getUrlParameter('id');
+
+    axios.post(`/orders/${orderId}/refunds`, {
+      refund: {
+        restock: this.state.restock,
+        notify: this.state.notify,
+        note: this.state.note,
+        shipping: {
+          amount: this.state.shipping
+        },
+        refund_line_items: this.state.lineItems,
+        amount: this.state.refundAmount
+      }
+    })
+    .then(response => {
+      console.log(response.data);
+    });
+  }
+
   onChangeShipping(value, id) {
     this.state.shipping = value;
     this.setState(this.state);
@@ -237,14 +257,16 @@ class App extends Component {
 
   render() {
     const { apiKey, shopOrigin } = window;
+    const buttonEnabled = (numeral(this.state.refundAmount).value()) ? false : true;
 
     return (
       <EmbeddedApp shopOrigin={shopOrigin} apiKey={apiKey}>
         <Page
           title={`Order ${this.state.orderName}`}
           primaryAction={{
-            content: 'Refund $ 0.00',
-            disabled: true,
+            content: `Refund $ ${this.state.refundAmount}`,
+            disabled: buttonEnabled,
+            onAction: this.newRefundSubmit.bind(this)
           }}
           secondaryActions={[
             {content: 'View order'},

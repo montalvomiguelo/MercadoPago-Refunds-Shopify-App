@@ -96,6 +96,11 @@ class App < Sinatra::Base
   post '/orders/:id/refunds' do
     shopify_session do
 
+      request.body.rewind
+      request_payload = request.body.read
+
+      refund_data = JSON.parse(request_payload)
+
       @shop = current_shop
 
       find_order!
@@ -122,9 +127,9 @@ class App < Sinatra::Base
       payment_id = payment['collection']['id']
 
       data = {
-        :amount => params[:refund][:amount],
+        :amount => refund_data['refund']['amount'],
         :metadata => {
-          :reason => params[:refund][:note],
+          :reason => refund_data['refund']['note'],
           :external_reference => checkout_id
         }
       }
@@ -152,11 +157,11 @@ class App < Sinatra::Base
       begin
         refund = ShopifyAPI::Refund.create(
           :order_id => params[:id],
-          :restock => params[:refund][:restock],
-          :notify => params[:refund][:notify],
-          :note => params[:refund][:note],
-          :shipping => { :amount => params[:refund][:shipping][:amount] },
-          :refund_line_items => params[:refund][:refund_line_items],
+          :restock => refund_data['refund']['restock'],
+          :notify => refund_data['refund']['notify'],
+          :note => refund_data['refund']['note'],
+          :shipping => { :amount => refund_data['refund']['shipping']['amount'] },
+          :refund_line_items => refund_data['refund']['refund_line_items'],
           :transactions => []
         )
       rescue ActiveResource::ServerError => e
@@ -165,7 +170,8 @@ class App < Sinatra::Base
 
       halt 422, 'Invalid refund' unless refund.valid?
 
-      redirect "/orders/#{params[:id]}"
+      #redirect "/orders/#{params[:id]}"
+      json refund
     end
   end
 
