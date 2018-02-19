@@ -88,7 +88,7 @@ class App extends Component {
 
   availableToRefundInOrder(order) {
     const totalPrice = numeral(order.total_price);
-    return totalPrice.subtract(order.total_refund.fractional).value();
+    return totalPrice.subtract(order.total_refund).value();
   }
 
   orderLineItems(order) {

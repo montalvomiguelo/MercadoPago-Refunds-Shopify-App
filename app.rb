@@ -65,7 +65,7 @@ class App < Sinatra::Base
 
       find_order!
 
-      @order.total_refund = @order.total_refund
+      @order.total_refund = @order.total_refund.to_s
 
       json @order
       #erb :'orders/show'
