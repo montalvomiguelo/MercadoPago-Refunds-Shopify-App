@@ -1,9 +1,53 @@
-<h3>MercadoPago Credentials</h3>
-<form action="/shop" method="post">
-  <input id="hidden" type="hidden" name="_method" value="put">
-  <label for="#client_id">Client ID</label>
-  <input class="u-full-width" type="text" name="client_id" value="<%= @shop.mp_client_id %>">
-  <label for="#client_secret">Client Secret</label>
-  <input class="u-full-width" type="text" name="client_secret" value="<%= @shop.mp_client_secret %>">
-  <input class="button-primary" type="submit" value="Save">
-</form>
+<div class="Polaris-Page">
+  <div class="Polaris-Page__Header Polaris-Page__Header--hasBreadcrumbs">
+    <div class="Polaris-Page__MainContent">
+      <div class="Polaris-Page__TitleAndActions">
+        <div class="Polaris-Page__Title">
+          <h1 class="Polaris-DisplayText Polaris-DisplayText--sizeLarge">MercadoPago Credentials</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="Polaris-Page__Content">
+    <div class="Polaris-Layout">
+      <div class="Polaris-Layout__Section">
+        <div class="Polaris-Card">
+          <div class="Polaris-Card__Section">
+            <form action="/shop" method="post">
+              <input id="hidden" type="hidden" name="_method" value="put">
+              <div class="Polaris-FormLayout">
+                <div class="Polaris-FormLayout__Item">
+                  <div class="">
+                    <div class="Polaris-Labelled__LabelWrapper">
+                      <div class="Polaris-Label"><label id="TextField1Label" for="TextField1" class="Polaris-Label__Text">Client ID</label></div>
+                    </div>
+                    <div class="Polaris-TextField">
+                      <input id="TextField1" name="client_id" value="<%= @shop.mp_client_id %>" class="Polaris-TextField__Input" aria-labelledby="TextField1Label" aria-invalid="false">
+                      <div class="Polaris-TextField__Backdrop"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="Polaris-FormLayout__Item">
+                  <div class="">
+                    <div class="Polaris-Labelled__LabelWrapper">
+                      <div class="Polaris-Label"><label id="TextField2Label" for="TextField2" class="Polaris-Label__Text">Client Secret</label></div>
+                    </div>
+                    <div class="Polaris-TextField">
+                      <input type="text" id="TextField2" name="client_secret" value="<%= @shop.mp_client_secret %>" class="Polaris-TextField__Input" aria-labelledby="TextField2Label" aria-invalid="false">
+                      <div class="Polaris-TextField__Backdrop"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="Polaris-FormLayout__Item">
+                  <div class="">
+                    <button type="submit" class="Polaris-Button Polaris-Button--primary"><span class="Polaris-Button__Content"><span>Save</span></span></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
