@@ -125,7 +125,7 @@ class App extends Component {
 
         const currency = data.currency;
 
-        const financialStatus = data.financial_status;
+        const financialStatus = this.orderPaymentStatus(data);
 
         const lineItems = this.orderLineItems(data);
 
@@ -163,6 +163,26 @@ class App extends Component {
           maximumRefundable: data.shipping.maximum_refundable
         });
       });
+  }
+
+  formatFinancialStatus(financialStatus) {
+    financialStatus = financialStatus.split('_').join(' ');
+    return financialStatus.replace(/\b\w/g, l => l.toUpperCase())
+  }
+
+  orderPaymentStatus(order) {
+    const totalRefund = numeral(order.total_refund);
+    const totalPrice = numeral(order.total_price);
+
+    if (totalRefund.value() && totalRefund.value() < totalPrice.value()) {
+      return 'Partially refunded';
+    }
+
+    if (totalRefund.value() == totalPrice.value()) {
+      return 'Refunded';
+    }
+
+    return this.formatFinancialStatus(order.financial_status);
   }
 
   calculateTaxLines(refund) {
@@ -248,7 +268,7 @@ class App extends Component {
 
       const totalAvailableToRefund = this.availableToRefundInOrder(data);
 
-      const financialStatus = data.financial_status;
+      const financialStatus = this.orderPaymentStatus(data);
 
       const lineItems = this.orderLineItems(data);
 
