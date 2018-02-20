@@ -37,7 +37,7 @@
                     <td><%= order.created_at.to_time.strftime('%b %d, %I:%M%p') %></td>
                     <td><%= %Q{#{order.customer.first_name} #{order.customer.last_name}} %></td>
                     <td><%= order.payment_status %></td>
-                    <td><%= order.fulfillment_status ? order.fulfillment_status.capitalize : '' %></td>
+                    <td><%= order.fulfillment_status ? order.fulfillment_status.capitalize : 'Unfulfilled' %></td>
                     <td><%= %Q{$ #{order.total_price}} %></td>
                 <% end %>
               </tbody>
