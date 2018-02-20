@@ -228,7 +228,16 @@ class App extends Component {
       }
     })
     .then(response => {
+      const data = response.data;
+
+      const maximumRefundable = numeral(this.state.maximumRefundable).subtract(data.shipping.amount).format('0,0.00');
+
+      this.setState({
+        maximumRefundable: maximumRefundable
+      });
+
       ShopifyApp.flashNotice('Refund created successfully');
+
       return axios.get(`/orders/${orderId}`)
     })
     .then(response => {
@@ -257,10 +266,10 @@ class App extends Component {
       });
     })
     .catch(error => {
-      ShopifyApp.flashError(error.response.data);
       this.setState({
         isRefunding: false
       });
+      ShopifyApp.flashError(error.response.data);
     });
   }
 
