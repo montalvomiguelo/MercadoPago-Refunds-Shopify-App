@@ -38,7 +38,8 @@ class App extends Component {
       note: '',
       notify: true,
       totalRefund: '',
-      isRefunding: false
+      isRefunding: false,
+      actionText: 'Refund'
     };
   }
 
@@ -212,7 +213,8 @@ class App extends Component {
     const orderId = this.getUrlParameter('id');
 
     this.setState({
-      isRefunding: true
+      isRefunding: true,
+      actionText: 'Refunding'
     });
 
     axios.post(`/orders/${orderId}/refunds`, {
@@ -233,7 +235,8 @@ class App extends Component {
       const maximumRefundable = numeral(this.state.maximumRefundable).subtract(data.shipping.amount).format('0,0.00');
 
       this.setState({
-        maximumRefundable: maximumRefundable
+        maximumRefundable: maximumRefundable,
+        actionText: 'Refund'
       });
 
       ShopifyApp.flashNotice('Refund created successfully');
@@ -267,7 +270,8 @@ class App extends Component {
     })
     .catch(error => {
       this.setState({
-        isRefunding: false
+        isRefunding: false,
+        actionText: 'Refund'
       });
       ShopifyApp.flashError(error.response.data);
     });
@@ -355,7 +359,7 @@ class App extends Component {
         <Page
           title={`Order ${this.state.orderName}`}
           primaryAction={{
-            content: `Refund $ ${this.state.refundAmount}`,
+            content: `${this.state.actionText} $ ${this.state.refundAmount}`,
             disabled: buttonDisabled,
             onAction: this.newRefundSubmit.bind(this)
           }}
