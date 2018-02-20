@@ -60,7 +60,7 @@ module ShopifyHelper
     end
 
     def sanitize_shop_param(params)
-      return unless params[:shop]
+      return unless params[:shop].present?
 
       name = params[:shop].to_s.strip
       name += '.myshopify.com' if !name.include?('myshopify.com') && !name.include?('.')
