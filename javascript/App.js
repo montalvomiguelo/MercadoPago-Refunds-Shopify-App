@@ -348,6 +348,7 @@ class App extends Component {
   render() {
     const { apiKey, shopOrigin } = window;
     const buttonDisabled = this.isButtonDisabled();
+    const orderId = this.getUrlParameter('id');
 
     return (
       <EmbeddedApp shopOrigin={shopOrigin} apiKey={apiKey}>
@@ -359,7 +360,7 @@ class App extends Component {
             onAction: this.newRefundSubmit.bind(this)
           }}
           secondaryActions={[
-            {content: 'View order'},
+            {content: 'View order', url: `/admin/orders/${orderId}`, target: 'parent'},
           ]}
         >
           <Order
