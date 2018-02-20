@@ -39,7 +39,8 @@ class App extends Component {
       notify: true,
       totalRefund: '',
       isRefunding: false,
-      actionText: 'Refund'
+      actionText: 'Refund',
+      gateway: ''
     };
   }
 
@@ -129,6 +130,8 @@ class App extends Component {
 
         const lineItems = this.orderLineItems(data);
 
+        const gateway = data.gateway;
+
         this.updateRefundLineItems(lineItems, data.refunds);
 
         this.setState({
@@ -145,7 +148,8 @@ class App extends Component {
           currency: currency,
           financialStatus: financialStatus,
           taxesIncluded: data.taxes_included,
-          totalRefund: data.total_refund
+          totalRefund: data.total_refund,
+          gateway: gateway
         });
 
         return axios.post(`/orders/${orderId}/refunds/calculate`, {
@@ -365,8 +369,9 @@ class App extends Component {
   isButtonDisabled() {
     const refundAmount = numeral(this.state.refundAmount).value();
     const isRefunding = this.state.isRefunding;
+    const isGatewayMercadoPago = this.state.gateway == 'mercado_pago';
 
-    return (!refundAmount || isRefunding) ? true : false;
+    return (!refundAmount || isRefunding || !isGatewayMercadoPago) ? true : false;
   }
 
   render() {
