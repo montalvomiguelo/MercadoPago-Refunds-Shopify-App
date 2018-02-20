@@ -37,7 +37,8 @@ class App extends Component {
       restock: true,
       note: '',
       notify: true,
-      totalRefund: ''
+      totalRefund: '',
+      isRefunding: false
     };
   }
 
@@ -209,6 +210,10 @@ class App extends Component {
   newRefundSubmit() {
     const orderId = this.getUrlParameter('id');
 
+    this.setState({
+      isRefunding: true
+    });
+
     axios.post(`/orders/${orderId}/refunds`, {
       refund: {
         restock: this.state.restock,
@@ -246,7 +251,14 @@ class App extends Component {
         lineItems: lineItems,
         totalAvailableToRefund: totalAvailableToRefund,
         financialStatus: financialStatus,
-        totalRefund: data.total_refund
+        totalRefund: data.total_refund,
+        isRefunding: false
+      });
+    })
+    .catch(error => {
+      ShopifyApp.flashError(error.response.data);
+      this.setState({
+        isRefunding: false
       });
     });
   }
@@ -316,9 +328,16 @@ class App extends Component {
     }));
   }
 
+  isButtonDisabled() {
+    const refundAmount = numeral(this.state.refundAmount).value();
+    const isRefunding = this.state.isRefunding;
+
+    return (!refundAmount || isRefunding) ? true : false;
+  }
+
   render() {
     const { apiKey, shopOrigin } = window;
-    const buttonEnabled = (numeral(this.state.refundAmount).value()) ? false : true;
+    const buttonDisabled = this.isButtonDisabled();
 
     return (
       <EmbeddedApp shopOrigin={shopOrigin} apiKey={apiKey}>
@@ -326,7 +345,7 @@ class App extends Component {
           title={`Order ${this.state.orderName}`}
           primaryAction={{
             content: `Refund $ ${this.state.refundAmount}`,
-            disabled: buttonEnabled,
+            disabled: buttonDisabled,
             onAction: this.newRefundSubmit.bind(this)
           }}
           secondaryActions={[
