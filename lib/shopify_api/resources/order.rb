@@ -42,6 +42,15 @@ class ShopifyAPI::Order
     Money.new(0)
   end
 
+  def payment_status
+    total_price = Monetize.parse(self.total_price)
+    total_refund = self.total_refund
+
+    return 'Partially Refunded'  if total_refund > Monetize.parse('0') && total_refund < total_price
+    return 'Refunded' if total_refund == total_price
+    return financial_status.split('_').map(&:capitalize).join(' ');
+  end
+
   private
 
     def update_metafield_value(metafield, value)
