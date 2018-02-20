@@ -182,7 +182,8 @@ class App extends Component {
 
   calculateRefundSubtotal(refund) {
     const subtotal = _.reduce(refund.refund_line_items, (sum, line) => {
-      return numeral(sum).add(line.price);
+      const linePrice = numeral(line.price).multiply(line.quantity);
+      return numeral(sum).add(linePrice.value());
     }, 0);
 
     return numeral(subtotal).value();
@@ -310,7 +311,7 @@ class App extends Component {
       const data = response.data;
       const item = _.find(data.refund_line_items, {line_item_id: id});
 
-      lineItem.linePrice = (item) ? item.subtotal : '0.00';
+      lineItem.linePrice = (item) ? numeral(item.price).multiply(item.quantity).value() : '0.00';
 
       const taxLines = this.calculateTaxLines(data);
       const shippingTax = response.data.shipping.tax;
