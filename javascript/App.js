@@ -65,7 +65,8 @@ class App extends Component {
         variant_title: item.variant_title,
         price: item.price,
         linePrice: '0.00',
-        lineQty: item.quantity
+        lineQty: item.quantity,
+        isRestockable: item.variant_inventory_management
       };
     });
   }

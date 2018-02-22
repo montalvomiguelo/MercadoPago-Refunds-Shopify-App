@@ -12,6 +12,9 @@ function LineItems(props) {
           <p className="line-item-title">
             {item.title}
             <em>{item.variant_title}</em>
+            {!item.isRestockable &&
+              <small>This product can’t be restocked.</small>
+            }
           </p>
           <p className="line-item-price">$ {item.price}</p>
           <span className="line-item-times">&times;</span>
