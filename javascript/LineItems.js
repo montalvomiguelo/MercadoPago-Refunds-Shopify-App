@@ -21,7 +21,7 @@ function LineItems(props) {
               value={item.quantity}
               onChange={(value) => props.onChangeQty(value, item.line_item_id)}
               min={0}
-              max={item.lineQty}
+              max={item.lineQty - item.refund}
               disabled={(item.refund >= item.lineQty) ? true : false}
             />
           </div>
