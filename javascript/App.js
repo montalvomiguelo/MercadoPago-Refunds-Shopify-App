@@ -98,7 +98,17 @@ class App extends Component {
   }
 
   refundLinesForItem(refundsWithItem, item) {
-    return _.flatMap(refundsWithItem, (refund) => refund.refund_line_items, {line_item_id: item.line_item_id});
+    const lines = [];
+
+    _.forEach(refundsWithItem, refund => {
+      _.forEach(refund.refund_line_items, line => {
+        if (line.line_item_id == item.line_item_id) {
+          lines.push(line);
+        }
+      });
+    });
+
+    return lines;
   }
 
   componentDidMount() {
