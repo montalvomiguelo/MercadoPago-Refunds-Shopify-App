@@ -63,8 +63,8 @@ class TestApp < Minitest::Test
   def test_callback_redirects_to_root_path
     mock_shopify_omniauth
 
-    fake 'https://snowdevil.myshopify.com/admin/orders.json?limit=10', body: load_fixture('orders.json')
-    fake 'https://snowdevil.myshopify.com/admin/orders/450789469/metafields.json', body: load_fixture('metafields.json')
+    fake "https://#{@shop_name}/admin/orders.json?limit=10", body: load_fixture('orders.json')
+    fake "https://#{@shop_name}/admin/orders/450789469/metafields.json", body: load_fixture('metafields.json')
 
     get '/auth/shopify/callback', {:shop => @shop_name}
 
@@ -75,8 +75,8 @@ class TestApp < Minitest::Test
 
   def test_root_with_session
     set_session
-    fake 'https://snowdevil.myshopify.com/admin/orders.json?limit=10', body: load_fixture('orders.json')
-    fake 'https://snowdevil.myshopify.com/admin/orders/450789469/metafields.json', body: load_fixture('metafields.json')
+    fake "https://#{@shop_name}/admin/orders.json?limit=10", body: load_fixture('orders.json')
+    fake "https://#{@shop_name}/admin/orders/450789469/metafields.json", body: load_fixture('metafields.json')
     get '/'
     assert last_response.ok?
   end
@@ -102,7 +102,7 @@ class TestApp < Minitest::Test
 
   private
 
-    def set_session(shop = 'snowdevil.myshopify.com', token = '1234')
+    def set_session(shop = @shop_name, token = '1234')
       App.any_instance.stubs(:session).returns(shopify: { shop: shop, token: token })
     end
 
@@ -111,7 +111,7 @@ class TestApp < Minitest::Test
 
       OmniAuth.config.mock_auth[:shopify] = OmniAuth::AuthHash.new({
         :provider => 'shopify',
-        :uid => 'snowdevil.myshopify.com',
+        :uid => @shop_name,
         :credentials => { :token => '1234' }
       })
 
