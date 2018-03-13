@@ -33,7 +33,7 @@ class TestApp < Minitest::Test
   def test_authenticate_with_invalid_shop_name_redirects_to_login
     post '/login', {:shop => 'https://shopify.com'}
     follow_redirect!
-    assert_match 'Installation', last_response.body
+    assert_match 'Install', last_response.body
   end
 
   def test_authenticate_redirects_to_shopiy_auth_via_javascript
@@ -63,6 +63,9 @@ class TestApp < Minitest::Test
   def test_callback_redirects_to_root_path
     mock_shopify_omniauth
 
+    fake 'https://snowdevil.myshopify.com/admin/orders.json?limit=10', body: load_fixture('orders.json')
+    fake 'https://snowdevil.myshopify.com/admin/orders/450789469/metafields.json', body: load_fixture('metafields.json')
+
     get '/auth/shopify/callback', {:shop => @shop_name}
 
     follow_redirect!
@@ -72,8 +75,8 @@ class TestApp < Minitest::Test
 
   def test_root_with_session
     set_session
-    fake 'https://snowdevil.myshopify.com/admin/orders/count.json', body: '{"count": 16}'
-    fake 'https://snowdevil.myshopify.com/admin/orders.json?limit=30&page=1', body: load_fixture('orders.json')
+    fake 'https://snowdevil.myshopify.com/admin/orders.json?limit=10', body: load_fixture('orders.json')
+    fake 'https://snowdevil.myshopify.com/admin/orders/450789469/metafields.json', body: load_fixture('metafields.json')
     get '/'
     assert last_response.ok?
   end

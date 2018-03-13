@@ -11,7 +11,6 @@ require 'mocha/setup'
 require 'fakeweb'
 
 require 'mercadopago'
-require 'will_paginate/array'
 
 DB = Sequel.connect(ENV['DATABASE_URL'])
 
