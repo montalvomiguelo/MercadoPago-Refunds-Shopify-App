@@ -85,7 +85,7 @@ class App < Sinatra::Base
       begin
         @refund = ShopifyAPI::Refund.calculate(data['refund'], :params => {:order_id => params[:id]})
       rescue ActiveResource::ResourceInvalid => e
-        halt 422, 'Invalid refund'
+        halt 422, {'Content-Type' => 'application/json'}, 'Invalid refund'
       end
 
       #erb :'orders/refund'

@@ -115,6 +115,49 @@ class TestApp < Minitest::Test
     assert last_response.content_type.include?('application/json')
   end
 
+  def test_post_calculate_refund_returns_json_data
+    set_session
+
+    payload = {
+      :refund => {
+        :shipping => { :full_refund => true },
+        :refund_line_items => [
+          {
+            :line_item_id => 466157049,
+            :quantity => 1
+          }
+        ]
+      }
+    }
+
+    fake "https://#{@shop_name}/admin/orders/450789469/refunds/calculate.json", {:method => :post, :body => load_fixture('suggested_refund.json')}
+    fake "https://#{@shop_name}/admin/orders/450789469.json", body: load_fixture('order.json')
+
+    post '/orders/450789469/refunds/calculate', payload.to_json
+
+    assert last_response.content_type.include?('application/json')
+    assert last_response.body.include?('refund_line_items')
+  end
+
+  def test_invalid_refund_calculation_returns_422
+    set_session
+
+    payload = {
+      :refund => {
+        :shipping => { :amount => 999999.0 },
+      }
+    }
+
+    ShopifyAPI::Refund.stubs(:calculate).raises(ActiveResource::ResourceInvalid, 'message')
+
+    fake "https://#{@shop_name}/admin/orders/450789469.json", body: load_fixture('order.json')
+
+    post '/orders/450789469/refunds/calculate', payload.to_json
+
+    assert_equal last_response.status, 422
+    assert last_response.content_type.include?('application/json')
+  end
+
   private
 
     def set_session(shop = @shop_name, token = '1234')
