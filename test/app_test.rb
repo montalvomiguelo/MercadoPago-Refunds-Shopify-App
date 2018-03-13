@@ -100,6 +100,21 @@ class TestApp < Minitest::Test
     get '/?shop=othertestshop.myshopify.com'
   end
 
+  def test_orders_route_delivers_app_view
+    set_session
+    get '/orders'
+    assert last_response.body.include?('bundle.js')
+  end
+
+  def test_single_order_route_returns_json_data
+    fake "https://#{@shop_name}/admin/orders/450789469.json", body: load_fixture('order.json')
+    fake "https://#{@shop_name}/admin/orders/450789469/metafields.json", body: load_fixture('metafields.json')
+    set_session
+    get '/orders/450789469'
+    assert last_response.ok?
+    assert last_response.content_type.include?('application/json')
+  end
+
   private
 
     def set_session(shop = @shop_name, token = '1234')
