@@ -1,0 +1,85 @@
+{
+  "paging": {
+    "total": 1,
+    "limit": 30,
+    "offset": 0
+  },
+  "results": [
+    {
+      "collection": {
+        "id": 3535309354,
+        "site_id": "MLM",
+        "date_created": "2018-03-13T19:19:24.000-04:00",
+        "date_approved": "2018-03-13T19:19:26.000-04:00",
+        "last_modified": "2018-03-13T19:19:26.000-04:00",
+        "money_release_date": "2018-03-25T19:19:26.000-04:00",
+        "operation_type": "regular_payment",
+        "collector_id": 280423871,
+        "sponsor_id": null,
+        "payer": {
+          "nickname": "TESTPBK1JF1O",
+          "first_name": "Test",
+          "last_name": "Test",
+          "phone": {
+            "area_code": "01",
+            "number": "1111-1111",
+            "extension": null
+          },
+          "email": "bob.norman@hostmail.com",
+          "id": 280424112,
+          "identification": {
+            "type": "IFE",
+            "number": "11111111111"
+          }
+        },
+        "external_reference": "901414060",
+        "merchant_order_id": 678508731,
+        "reason": "Miguelo Store - #901414060",
+        "currency_id": "MXN",
+        "transaction_amount": 409.94,
+        "total_paid_amount": 409.94,
+        "shipping_cost": 0,
+        "account_money_amount": 0,
+        "mercadopago_fee": 7.88,
+        "net_received_amount": 366.13,
+        "marketplace_fee": null,
+        "coupon_id": null,
+        "coupon_amount": 0,
+        "coupon_fee": null,
+        "finance_fee": 0,
+        "status": "approved",
+        "status_detail": "accredited",
+        "status_code": "0",
+        "released": "no",
+        "payment_type": "credit_card",
+        "installments": 1,
+        "installment_amount": 409.94,
+        "deferred_period": null,
+        "cardholder": {
+          "name": "Bob Norman",
+          "identification": {
+            "type": null,
+            "number": null
+          }
+        },
+        "statement_descriptor": "MERCADOPAGO",
+        "transaction_order_id": null,
+        "last_four_digits": "3764",
+        "payment_method_id": "visa",
+        "marketplace": "NONE",
+        "tags": [],
+        "refunds": [],
+        "amount_refunded": 0,
+        "bank_transfer_detail": {
+          "id": null,
+          "transaction_id": null,
+          "financial_institution_description": null
+        },
+        "notification_url": "https://www.mercadopago.com/cart/preferences/ipn?x_account_id=23",
+        "internal_metadata": {
+          "processed_by": "checkout-off-v1"
+        }
+      }
+    }
+  ]
+}

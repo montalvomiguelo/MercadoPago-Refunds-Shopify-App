@@ -1,0 +1,18 @@
+{
+  "status": "201",
+  "response": {
+    "id": 371095627,
+    "collection_id": 3535309354,
+    "metadata": {
+      "external_reference": 901414060,
+      "reason": "The reason"
+    },
+    "amount": 199,
+    "source": {
+      "id": "280423871",
+      "name": "Test Test",
+      "type": "collector"
+    },
+    "date_created": "2018-03-13T20:02:33.653-04:00"
+  }
+}

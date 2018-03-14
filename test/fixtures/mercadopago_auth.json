@@ -1,0 +1,9 @@
+{
+  "access_token": "APP_USR-23",
+  "refresh_token": "TG-23",
+  "live_mode": true,
+  "user_id": 23,
+  "token_type": "bearer",
+  "expires_in": 21600,
+  "scope": "offline_access read write"
+}
