@@ -7,7 +7,24 @@ class TestApp < Minitest::Test
 
   def setup
     @shop_name = 'snowdevil.myshopify.com'
+
     @base_url = 'https://app.example.com'
+
+    @refund_payload = {
+      :refund => {
+        :shipping => { :full_refund => true },
+        :refund_line_items => [
+          {
+            :line_item_id => 466157049,
+            :quantity => 1
+          }
+        ],
+        :amount => 199
+      }
+    }
+
+    @mp = MercadoPago.new('23', 'qwer')
+
     DatabaseCleaner.start
   end
 
@@ -154,49 +171,68 @@ class TestApp < Minitest::Test
 
     post '/orders/450789469/refunds/calculate', payload.to_json
 
-    assert_equal last_response.status, 422
+    assert_equal 422, last_response.status
     assert last_response.content_type.include?('application/json')
   end
 
-  def test_new_refund_with_mercadopago
+  def test_refund_creates_mercadopago_client
     set_session
 
-    shop = mock()
-    shop.stubs(:mp_client_id).returns('23')
-    shop.stubs(:mp_client_secret).returns('qwer')
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
 
-    fake "https://api.mercadopago.com/oauth/token", {:method => :post, :body => load_fixture('mercadopago_auth.json')}
-    fake "https://api.mercadopago.com/collections/3535309354/refunds?access_token=APP_USR-23", {:method => :post, :body => load_fixture('refund.json')}
-    fake "https://#{@shop_name}/admin/orders/450789469.json", body: load_fixture('order.json')
-    fake "https://api.mercadopago.com/collections/search?external_reference=901414060&access_token=APP_USR-23", body: load_fixture('payment.json')
-    fake "https://#{@shop_name}/admin/orders/450789469/metafields/1352251342860.json", {:method => :put}
-    fake "https://#{@shop_name}/admin/orders/450789469.json", {:method => :put}
-    fake "https://#{@shop_name}/admin/orders/450789469/refunds.json", {:method => :post}
-    fake "https://#{@shop_name}/admin/orders/450789469/metafields.json", body: load_fixture('metafields.json')
+    fake_refund_requests
 
     App.any_instance.stubs(:current_shop).returns(shop)
 
-    payload = {
-      :refund => {
-        :shipping => { :full_refund => true },
-        :refund_line_items => [
-          {
-            :line_item_id => 466157049,
-            :quantity => 1
-          }
-        ],
-        :amount => 199
-      }
-    }
+    MercadoPago.expects(:new).returns(@mp)
 
-    mp = MercadoPago.new('23', 'qwer')
+    post '/orders/450789469/refunds', @refund_payload.to_json
+  end
 
-    MercadoPago.expects(:new).returns(mp)
+  def test_mercadopago_credentials_are_verified
+    set_session
 
-    post '/orders/450789469/refunds', payload.to_json
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    MercadoPago.any_instance.expects(:get_access_token).returns('APP_USR-23').at_least_once
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+  end
+
+  def test_invalid_mercadopago_credentials_halts_401
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    MercadoPago.any_instance.stubs(:get_access_token).raises(RuntimeError, 'message').at_least_once
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+
+    assert_equal 401, last_response.status
   end
 
   private
+
+    def fake_refund_requests
+      fake "https://api.mercadopago.com/oauth/token", {:method => :post, :body => load_fixture('mercadopago_auth.json')}
+      fake "https://api.mercadopago.com/collections/3535309354/refunds?access_token=APP_USR-23", {:method => :post, :body => load_fixture('refund.json')}
+      fake "https://#{@shop_name}/admin/orders/450789469.json", body: load_fixture('order.json')
+      fake "https://api.mercadopago.com/collections/search?external_reference=901414060&access_token=APP_USR-23", body: load_fixture('payment.json')
+      fake "https://#{@shop_name}/admin/orders/450789469/metafields/1352251342860.json", {:method => :put}
+      fake "https://#{@shop_name}/admin/orders/450789469.json", {:method => :put}
+      fake "https://#{@shop_name}/admin/orders/450789469/refunds.json", {:method => :post}
+      fake "https://#{@shop_name}/admin/orders/450789469/metafields.json", body: load_fixture('metafields.json')
+    end
 
     def set_session(shop = @shop_name, token = '1234')
       App.any_instance.stubs(:session).returns(shopify: { shop: shop, token: token })
