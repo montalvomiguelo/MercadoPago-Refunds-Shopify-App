@@ -357,6 +357,42 @@ class TestApp < Minitest::Test
     post '/orders/450789469/refunds', @refund_payload.to_json
   end
 
+  def test_create_refund_in_shopify
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    shopify_refund = mock()
+    shopify_refund.expects(:valid?).returns(true)
+    shopify_refund.expects(:as_json).returns('{}')
+    ShopifyAPI::Refund.expects(:create).returns(shopify_refund)
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+  end
+
+  def test_create_refund_in_shopify_with_invalid_params_halt_422
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    shopify_refund = mock()
+    ShopifyAPI::Refund.expects(:create).raises(ActiveResource::ServerError, 'message')
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+
+    assert 422, last_response.status
+  end
+
   private
 
     def fake_refund_requests
