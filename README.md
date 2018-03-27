@@ -76,6 +76,12 @@ heroku config:set SHOPIFY_SHARED_SECRET=jordan23
 heroku config:set SECRET='This is a key that is 256 bits!!'
 ```
 
+Add nodejs build pack in Heroku
+
+```
+heroku buildpacks:add heroku/nodejs
+```
+
 Push to Heroku
 ```
 git push heroku master
