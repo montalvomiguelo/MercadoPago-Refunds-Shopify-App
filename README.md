@@ -15,11 +15,31 @@ Get your CLIENT_ID and CLIENT_SECRET in the following address:
 * Chile: https://www.mercadopago.com/mlc/herramientas/aplicaciones
 
 ## Development
-Install the app dependencies and start the app
+Install the app dependencies
 
 ```
 bundle install
 npm install
+```
+
+Run the migrations
+
+```
+sequel -m db/migrate sqlite://db/development.sqlite3
+```
+
+Set env variables in .env file
+
+```
+SHOPIFY_API_KEY=23jordan
+SHOPIFY_SHARED_SECRET=23jordan
+DATABASE_URL='sqlite://db/development.sqlite3'
+SECRET='This is a key that is 256 bits!!'
+```
+
+Start the app
+
+```
 rackup
 ```
 
