@@ -20,12 +20,6 @@ class ShopifyAPI::Order
     Money.new(total_refund) == total_price.to_money
   end
 
-  def refunds_for_line_item(line_item)
-    refunds_with_line_item = refunds_with_line_item(line_item)
-    refund_line_items = refund_line_items(line_item, refunds_with_line_item)
-    sum_refund_line_items(refund_line_items)
-  end
-
   def persist_refund_amount(amount)
     metafield = find_metafield_by_namespace('mercadopago')
 
@@ -63,19 +57,4 @@ class ShopifyAPI::Order
     def find_metafield_by_namespace(namespace)
       metafields.detect { |metafield| metafield.namespace == namespace }
     end
-
-    def refunds_with_line_item(line_item)
-      refunds.select do |refund|
-        refund.contains_line_item?(line_item)
-      end
-    end
-
-    def refund_line_items(line_item, refunds_with_line_item)
-      refunds_with_line_item.map { |refund| refund.find_refund_line_with_item(line_item) }
-    end
-
-    def sum_refund_line_items(refund_line_items)
-      refund_line_items.inject(0) { |sum, refund_line| sum + refund_line.quantity }
-    end
-
 end
