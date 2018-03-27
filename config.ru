@@ -3,7 +3,9 @@ Bundler.require(:default, ENV['RACK_ENV'])
 
 require 'mercadopago'
 
-Dotenv.load
+if Gem::Specification.find_all_by_name('dotenv').any?
+  Dotenv.load
+end
 
 DB = Sequel.connect(ENV['DATABASE_URL'], logger: Logger.new(STDOUT))
 
