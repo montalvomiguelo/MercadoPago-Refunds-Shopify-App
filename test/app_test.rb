@@ -271,6 +271,50 @@ class TestApp < Minitest::Test
     assert_equal 404, last_response.status
   end
 
+  def test_issue_a_refund_in_mercadopago
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    transaction = {
+      'status' => '201',
+      'response' => {
+        'amount' => '199'
+      }
+    }
+
+    MercadoPago.any_instance.expects(:post).returns(transaction)
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+  end
+
+  def test_invalid_transaction_halt_422
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    transaction = {
+      'status' => '400',
+      'response' => {}
+    }
+
+    MercadoPago.any_instance.stubs(:post).returns(transaction)
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+
+    assert_equal 422, last_response.status
+  end
+
   private
 
     def fake_refund_requests
