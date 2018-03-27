@@ -341,6 +341,22 @@ class TestApp < Minitest::Test
     post '/orders/450789469/refunds', @refund_payload.to_json
   end
 
+  def test_add_tags_to_order
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    ShopifyAPI::Order.any_instance.expects(:tags_string)
+    ShopifyAPI::Order.any_instance.expects(:save)
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+  end
+
   private
 
     def fake_refund_requests
