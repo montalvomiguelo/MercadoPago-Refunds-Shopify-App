@@ -315,6 +315,32 @@ class TestApp < Minitest::Test
     assert_equal 422, last_response.status
   end
 
+  def test_order_persists_refunded_amount
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    fake_refund_requests
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+    MercadoPago.stubs(:new).returns(@mp)
+
+    metafields = {
+      'metafields' => [
+        {
+          'id' => 1352251342860,
+          'namespace': 'mercadopago',
+          'key': 'refund_amount',
+          'value': '119192',
+        }
+      ]
+    }
+
+    ShopifyAPI::Order.any_instance.expects(:persist_refund_amount).returns(metafields)
+
+    post '/orders/450789469/refunds', @refund_payload.to_json
+  end
+
   private
 
     def fake_refund_requests
