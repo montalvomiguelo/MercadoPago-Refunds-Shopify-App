@@ -52,6 +52,41 @@ rake test:prepare
 rake test
 ```
 
+## Deploy
+This app was created with deploying to Heroku in mind.
+
+Download the Heroku Toolbelt and run the following command to create a new application:
+
+```
+heroku apps:create <your new app name>
+```
+
+You will also need to add ClearDB(mysql) free add-on to your new Heroku app and then retrieve your DB url
+
+```
+heroku addons:create cleardb:ignite
+heroku config | grep CLEARDB_DATABASE_URL
+```
+
+Set your env variables in Heroku
+```
+heroku config:set DATABASE_URL='mysql2://your-db-url'
+heroku config:set SHOPIFY_API_KEY=jordan23
+heroku config:set SHOPIFY_SHARED_SECRET=jordan23
+heroku config:set SECRET='This is a key that is 256 bits!!'
+```
+
+Push to Heroku
+```
+git push heroku master
+```
+
+Run migrations in Heroku
+
+```
+heroku run sequel -m db/migrate mysql2://your-db-url
+```
+
 ## Contributing
 
 PRs welcome!
