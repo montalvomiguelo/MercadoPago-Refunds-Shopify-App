@@ -47,16 +47,11 @@ class App < Sinatra::Base
     redirect return_to
   end
 
-  get '/' do
-    shopify_session do
-      @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
-      erb :'orders/index'
-    end
-  end
-
   get '/orders' do
     shopify_session do
-      erb :app, layout: false
+      @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
+
+      json @orders
     end
   end
 
@@ -68,7 +63,6 @@ class App < Sinatra::Base
       @order.total_refund = @order.total_refund.to_s
 
       json @order
-      #erb :'orders/show'
     end
   end
 
@@ -88,7 +82,6 @@ class App < Sinatra::Base
         halt 422, {'Content-Type' => 'application/json'}, 'Invalid refund'
       end
 
-      #erb :'orders/refund'
       json @refund
     end
   end
@@ -170,16 +163,15 @@ class App < Sinatra::Base
 
       halt 422, 'Invalid refund' unless refund.valid?
 
-      #redirect "/orders/#{params[:id]}"
       json refund
     end
   end
 
-  get '/preferences' do
+  get '/shop' do
     shopify_session do
       @shop = current_shop
 
-      erb :preferences
+      json @shop
     end
   end
 
@@ -193,6 +185,12 @@ class App < Sinatra::Base
       shop.save
 
       redirect '/preferences'
+    end
+  end
+
+  get '/*' do
+    shopify_session do
+      erb :app, layout: false
     end
   end
 end
