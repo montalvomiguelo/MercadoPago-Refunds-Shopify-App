@@ -179,12 +179,13 @@ class App < Sinatra::Base
     shopify_session do
       shop = current_shop
 
-      shop.mp_client_id = params[:client_id]
-      shop.mp_client_secret = params[:client_secret]
+      request.body.rewind
+      data = JSON.parse(request.body.read)
 
-      shop.save
+      shop.mp_client_id = data['client_id']
+      shop.mp_client_secret = data['client_secret']
 
-      redirect '/preferences'
+      json shop.save
     end
   end
 
