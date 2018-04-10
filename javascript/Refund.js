@@ -396,6 +396,7 @@ class Refund extends Component {
           onAction: this.newRefundSubmit.bind(this)
         }}
         secondaryActions={[
+          {content: 'Preferences', url: 'preferences'},
           {content: 'View order', url: `/admin/orders/${orderId}`, target: 'parent'},
         ]}
       >
