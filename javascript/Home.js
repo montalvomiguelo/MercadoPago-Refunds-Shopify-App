@@ -45,7 +45,7 @@ class Home extends Component {
             <Banner
               status="info"
             >
-              <p>To refund an order, either select an order from your <Link url={`${window.shopOrigin}/admin/orders`}>Orders</Link> page or click on one of the recent orders below.</p>
+              <p>To refund an order, either select an order from your <Link url={`${window.shopOrigin}/admin/orders`} external={true}>Orders</Link> page or click on one of the recent orders below.</p>
             </Banner>
           </Layout.Section>
           <Layout.Section>
