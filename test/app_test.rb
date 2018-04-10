@@ -87,7 +87,6 @@ class TestApp < Minitest::Test
 
     follow_redirect!
     assert last_response.ok?
-    assert_match 'Order', last_response.body
   end
 
   def test_root_with_session
@@ -101,7 +100,6 @@ class TestApp < Minitest::Test
   def test_root_with_session_activates_api
     set_session
     App.any_instance.expects(:activate_shopify_api).with(@shop_name, '1234')
-    ShopifyAPI::Order.expects(:find).returns([])
     get '/'
     assert last_response.ok?
   end
@@ -117,9 +115,9 @@ class TestApp < Minitest::Test
     get '/?shop=othertestshop.myshopify.com'
   end
 
-  def test_orders_route_delivers_app_view
+  def test_root_path_delivers_app_view
     set_session
-    get '/orders'
+    get '/'
     assert last_response.body.include?('bundle.js')
   end
 
@@ -391,6 +389,43 @@ class TestApp < Minitest::Test
     post '/orders/450789469/refunds', @refund_payload.to_json
 
     assert 422, last_response.status
+  end
+
+  def test_get_shop_in_json
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    App.any_instance.expects(:current_shop).returns(shop)
+
+    get '/shop'
+
+    assert last_response.ok?
+    assert last_response.content_type.include?('application/json')
+    assert last_response.body.include?(@shop_name)
+  end
+
+  def test_update_mercadopago_credentials_in_shop
+    set_session
+
+    shop = create(:shop, name: @shop_name, token: '1234', mp_client_id: '23', mp_client_secret: 'qwert')
+
+    client_id = 'hello'
+    client_secret = 'diana'
+
+    App.any_instance.stubs(:current_shop).returns(shop)
+
+    payload = {
+      client_id: client_id,
+      client_secret: client_secret
+    }
+
+    put '/shop', payload.to_json
+
+    shop.reload
+
+    assert_equal client_id, shop.mp_client_id
+    assert_equal client_secret, shop.mp_client_secret
   end
 
   private
