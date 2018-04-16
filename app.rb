@@ -3,7 +3,6 @@ class App < Sinatra::Base
   enable :inline_templates
   enable :method_override
 
-  set :erb, :layout => :'layouts/application'
   set :protection, :except => :frame_options
 
   set :api_key, ENV['SHOPIFY_API_KEY']
@@ -47,16 +46,11 @@ class App < Sinatra::Base
     redirect return_to
   end
 
-  get '/' do
-    shopify_session do
-      @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
-      erb :'orders/index'
-    end
-  end
-
   get '/orders' do
     shopify_session do
-      erb :app, layout: false
+      @orders = ShopifyAPI::Order.find(:all, params: { limit: 10 })
+
+      json @orders
     end
   end
 
@@ -68,7 +62,6 @@ class App < Sinatra::Base
       @order.total_refund = @order.total_refund.to_s
 
       json @order
-      #erb :'orders/show'
     end
   end
 
@@ -88,7 +81,6 @@ class App < Sinatra::Base
         halt 422, {'Content-Type' => 'application/json'}, 'Invalid refund'
       end
 
-      #erb :'orders/refund'
       json @refund
     end
   end
@@ -170,16 +162,15 @@ class App < Sinatra::Base
 
       halt 422, 'Invalid refund' unless refund.valid?
 
-      #redirect "/orders/#{params[:id]}"
       json refund
     end
   end
 
-  get '/preferences' do
+  get '/shop' do
     shopify_session do
       @shop = current_shop
 
-      erb :preferences
+      json @shop
     end
   end
 
@@ -187,12 +178,19 @@ class App < Sinatra::Base
     shopify_session do
       shop = current_shop
 
-      shop.mp_client_id = params[:client_id]
-      shop.mp_client_secret = params[:client_secret]
+      request.body.rewind
+      data = JSON.parse(request.body.read)
 
-      shop.save
+      shop.mp_client_id = data['client_id']
+      shop.mp_client_secret = data['client_secret']
 
-      redirect '/preferences'
+      json shop.save
+    end
+  end
+
+  get '/*' do
+    shopify_session do
+      erb :app, layout: false
     end
   end
 end
