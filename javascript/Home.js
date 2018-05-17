@@ -64,7 +64,9 @@ class Home extends Component {
                 <tbody>
                     {this.state.orders.map(order => (
                       <tr key={order.id}>
-                        <td><a href={`/order?id=${order.id}`}>{order.name}</a></td>
+                        <td>
+                          <Link url={`/order?id=${order.id}`}>{order.name}</Link>
+                        </td>
                         <td>{this.formatDate(order.created_at)}</td>
                         <td>{order.billing_address.name}</td>
                         <td>{order.financial_status}</td>
