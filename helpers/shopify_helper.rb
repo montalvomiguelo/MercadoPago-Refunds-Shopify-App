@@ -39,12 +39,12 @@ module ShopifyHelper
     session.delete(:shopify)
   end
 
-  def activate_shopify_api(shop_name, token)
-    api_session = ShopifyAPI::Session.new(shop_name, token)
-    ShopifyAPI::Base.activate_session(api_session)
-  end
-
   private
+
+    def activate_shopify_api(shop_name, token)
+      api_session = ShopifyAPI::Session.new(shop_name, token)
+      ShopifyAPI::Base.activate_session(api_session)
+    end
 
     def authenticate(return_to = '/')
       if shop_name = sanitized_shop_name
