@@ -17,7 +17,7 @@ module ShopifyHelper
   end
 
   def shopify_session(&block)
-    return_to = request.env['sinatra.route'].split(' ').last
+    return_to = request.path_info
 
     if !session.key?(:shopify)
       authenticate(return_to)
