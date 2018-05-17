@@ -21,7 +21,7 @@ module ShopifyHelper
 
     if !session.key?(:shopify)
       authenticate(return_to)
-    elsif params[:shop] && session[:shopify][:shop] != sanitize_shop_param(params)
+    elsif params[:shop].present? && session[:shopify][:shop] != sanitize_shop_param(params)
       logout
       authenticate(return_to)
     else
