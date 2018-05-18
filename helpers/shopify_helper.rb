@@ -17,11 +17,11 @@ module ShopifyHelper
   end
 
   def shopify_session(&block)
-    return_to = request.env['sinatra.route'].split(' ').last
+    return_to = request.path_info
 
     if !session.key?(:shopify)
       authenticate(return_to)
-    elsif params[:shop] && session[:shopify][:shop] != sanitize_shop_param(params)
+    elsif params[:shop].present? && session[:shopify][:shop] != sanitize_shop_param(params)
       logout
       authenticate(return_to)
     else
@@ -39,12 +39,12 @@ module ShopifyHelper
     session.delete(:shopify)
   end
 
-  def activate_shopify_api(shop_name, token)
-    api_session = ShopifyAPI::Session.new(shop_name, token)
-    ShopifyAPI::Base.activate_session(api_session)
-  end
-
   private
+
+    def activate_shopify_api(shop_name, token)
+      api_session = ShopifyAPI::Session.new(shop_name, token)
+      ShopifyAPI::Base.activate_session(api_session)
+    end
 
     def authenticate(return_to = '/')
       if shop_name = sanitized_shop_name
