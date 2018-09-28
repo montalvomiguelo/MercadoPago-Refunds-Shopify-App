@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 import {
   Page,
@@ -26,11 +27,6 @@ class Home extends Component {
           orders: data
         });
       });
-  }
-
-  formatDate(date_string) {
-    const date = new Date(date_string);
-    return date.toLocaleString();
   }
 
   render() {
@@ -67,7 +63,7 @@ class Home extends Component {
                         <td>
                           <Link url={`/order?id=${order.id}`}>{order.name}</Link>
                         </td>
-                        <td>{this.formatDate(order.created_at)}</td>
+                        <td>{moment(order.created_at).format('MMM DD, hh:mma')}</td>
                         <td>{order.billing_address.name}</td>
                         <td>{order.financial_status}</td>
                         <td>{order.fulfillment_status ? order.fulfillment_status : 'unfulfilled'}</td>
