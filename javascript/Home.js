@@ -6,7 +6,9 @@ import {
   Layout,
   Card,
   Banner,
-  Link
+  Link,
+  DataTable,
+  Badge
 } from '@shopify/polaris';
 
 import axios from 'axios';
@@ -23,9 +25,19 @@ class Home extends Component {
     axios.get(`/orders`)
       .then(response => {
         const data = response.data;
-        this.setState({
-          orders: data
-        });
+
+        console.log(data);
+
+        const orders = data.map(order => [
+          <Link url={`/order?id=${order.id}`}>{order.name}</Link>,
+          moment(order.created_at).format('MMM DD, hh:mma'),
+          order.billing_address.name,
+          <Badge>{order.financial_status}</Badge>,
+          <Badge>{order.fulfillment_status || 'unfulfilled'}</Badge>,
+          `$ ${order.total_price}`
+        ]);
+
+        this.setState({orders});
       });
   }
 
@@ -46,32 +58,25 @@ class Home extends Component {
           </Layout.Section>
           <Layout.Section>
             <Card sectioned>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Order</th>
-                    <th>Date</th>
-                    <th>Placed by</th>
-                    <th>Financial status</th>
-                    <th>Fulfillment status</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {this.state.orders.map(order => (
-                      <tr key={order.id}>
-                        <td>
-                          <Link url={`/order?id=${order.id}`}>{order.name}</Link>
-                        </td>
-                        <td>{moment(order.created_at).format('MMM DD, hh:mma')}</td>
-                        <td>{order.billing_address.name}</td>
-                        <td>{order.financial_status}</td>
-                        <td>{order.fulfillment_status ? order.fulfillment_status : 'unfulfilled'}</td>
-                        <td>$ {order.total_price}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+              <DataTable
+                columnContentTypes={[
+                  'text',
+                  'text',
+                  'text',
+                  'text',
+                  'text',
+                  'text'
+                ]}
+                headings={[
+                  'Order',
+                  'Date',
+                  'Placed by',
+                  'Financial status',
+                  'Fulfillment status',
+                  'Total'
+                ]}
+                rows={this.state.orders}
+              />
             </Card>
           </Layout.Section>
         </Layout>
