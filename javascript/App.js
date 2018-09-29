@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EmbeddedApp } from '@shopify/polaris/embedded';
+import { AppProvider } from '@shopify/polaris';
 
 import Refund from './Refund';
 import Home from './Home';
@@ -15,7 +15,7 @@ function App(props) {
   const { apiKey, shopOrigin } = window;
 
   return (
-    <EmbeddedApp shopOrigin={shopOrigin} apiKey={apiKey}>
+    <AppProvider shopOrigin={shopOrigin} apiKey={apiKey}>
       <BrowserRouter>
         <div>
           <Route exact path="/" component={Home} />
@@ -23,7 +23,7 @@ function App(props) {
           <Route path="/preferences" component={Preferences} />
         </div>
       </BrowserRouter>
-    </EmbeddedApp>
+    </AppProvider>
   );
 };
 
