@@ -118,7 +118,7 @@ class TestApp < Minitest::Test
   def test_root_path_delivers_app_view
     set_session
     get '/'
-    assert last_response.body.include?('bundle.js')
+    assert last_response.body.include?('root')
   end
 
   def test_single_order_route_returns_json_data
