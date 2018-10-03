@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --config config/webpack.dev.js",
     "build": "webpack --config config/webpack.prod.js"
   },
   "author": "",
@@ -19,6 +20,7 @@
     "babel-loader": "^8.0.4",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
@@ -32,6 +34,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-hot-loader": "^4.3.11",
     "react-router-dom": "^4.2.2"
   }
 }

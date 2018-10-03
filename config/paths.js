@@ -6,5 +6,5 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 module.exports = {
   appIndex: resolveApp('javascript/packs/application.js'),
   appBuild: resolveApp('public/packs'),
-  servedPath: '/packs/',
+  servedPath: 'https://localhost:3035/packs/',
 };

@@ -32,6 +32,10 @@
   </script>
 
   <div id="root"></div>
-  <script src="/packs/application.js"></script>
+  <% if ENV['RACK_ENV'] == 'production' %>
+    <script src="/packs/application.js"></script>
+  <% else %>
+    <script src="https://localhost:3035/packs/application.js"></script>
+  <% end %>
 </body>
 </html>

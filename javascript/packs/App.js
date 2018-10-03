@@ -1,4 +1,5 @@
 import React from 'react';
+import { hot } from 'react-hot-loader';
 
 import { AppProvider } from '@shopify/polaris';
 
@@ -27,4 +28,4 @@ function App(props) {
   );
 };
 
-export default App;
+export default hot(module)(App);
