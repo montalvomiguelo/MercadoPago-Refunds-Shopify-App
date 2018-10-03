@@ -12,11 +12,7 @@ import Amount from './Amount';
 import Shipping from './Shipping';
 import FooterAmount from './FooterAmount';
 
-import numeral from 'numeral';
-
 function Footer(props) {
-  const restock = (numeral(props.subtotal).value()) ? false : true;
-
   return (
     <div className="footer">
       <Amount title="Subtotal" price={props.subtotal} />
@@ -31,12 +27,9 @@ function Footer(props) {
       <FooterAmount
         amount={props.refundAmount}
         onChangeAmount={props.onChangeAmount}
-      />
-      <Checkbox
-        label="Restock"
-        checked={props.restock}
-        onChange={props.onChangeRestock}
-        disabled={restock}
+        restock={props.restock}
+        onChangeRestock={props.onChangeRestock}
+        subtotal={props.subtotal}
       />
       <FormLayout>
         <TextField
