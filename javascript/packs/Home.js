@@ -13,6 +13,8 @@ import {
 
 import axios from 'axios';
 
+import SkeletonHome from './SkeletonHome';
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -40,6 +42,10 @@ class Home extends Component {
   }
 
   render() {
+    if (this.state.orders.length === 0) {
+      return <SkeletonHome />;
+    }
+
     return (
       <Page
         secondaryActions={[
