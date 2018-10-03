@@ -16,17 +16,19 @@ function LineItems(props) {
               <small>This product can’t be restocked.</small>
             }
           </p>
-          <p className="line-item-price">$ {item.price}</p>
-          <span className="line-item-times">&times;</span>
-          <div className="line-item-qty">
-            <TextField
-              type="number"
-              value={item.quantity}
-              onChange={(value) => props.onChangeQty(value, item.line_item_id)}
-              min={0}
-              max={item.lineQty - item.refund}
-              disabled={(item.refund >= item.lineQty) ? true : false}
-            />
+          <div className="line-item-attributes">
+            <p className="line-item-price">$ {item.price}</p>
+            <span className="line-item-times">&times;</span>
+            <div className="line-item-qty">
+              <TextField
+                type="number"
+                value={item.quantity}
+                onChange={(value) => props.onChangeQty(value, item.line_item_id)}
+                min={0}
+                max={item.lineQty - item.refund}
+                disabled={(item.refund >= item.lineQty) ? true : false}
+              />
+            </div>
           </div>
           <span className="line-item-line-price">$ {item.linePrice}</span>
         </li>

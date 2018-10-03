@@ -2,7 +2,8 @@
   --table-border: #DFE3E8;
   --color-archived: #637381;
   --color-body-text: #212B36;
-  --header-font-weight: 500;
+  --header-font-weight: 600;
+  --color-bg-gray: #F9F9F9;
 }
 
 /* Breakpoint Queries */
