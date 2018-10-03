@@ -3,8 +3,8 @@
   margin-top: 20px;
 
   .Polaris-FormLayout {
-    margin-top: 20px;
   }
+    margin-top: 20px;
 
   .Polaris-FormLayout {
     text-align: left;
@@ -12,21 +12,21 @@
 }
 
 .footer-subtotal {
-  color: $color-archived;
+  color: var(--color-archived);
   display: flex;
   justify-content: flex-end;
-  padding: 6px 0;
 
+  padding: 6px 0;
   > span {
-    color: $color-archived;
+    color: var(--color-archived);
   }
 
   > em {
     font-style: normal;
     width: 100px;
     padding-left: 10px;
-    color: $color-body-text;
-    font-weight: $header-font-weight;
+    color: var(--color-body-text);
+    font-weight: var(--header-font-weight);
   }
 }
 
@@ -37,21 +37,17 @@
   padding: 6px 0;
 
   > span {
-    color: $color-archived;
+    color: var(--color-archived);
   }
 
   > em {
     font-style: normal;
   }
 
-  .input-group {
+  .Polaris-TextField {
     width: 90px;
     min-width: 90px;
     margin-left: 10px;
-  }
-
-  input {
-    text-align: right;
   }
 }
 
@@ -63,15 +59,15 @@
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 20px 0 0;
-  border-top: 1px solid $table-border;
+  border-top: 1px solid var(--table-color-border);
 
   > span {
-    color: $color-archived;
+    color: var(--color-archived);
   }
 
-  .input-group {
-    width: 120px;
-    min-width: 120px;
+  .Polaris-TextField {
+    width: 100%;
+    max-width: 120px;
     margin-left: 10px;
   }
 
@@ -79,9 +75,5 @@
     width: 100%;
     justify-content: flex-end;
     margin-top: 16px;
-  }
-
-  input {
-    text-align: right;
   }
 }

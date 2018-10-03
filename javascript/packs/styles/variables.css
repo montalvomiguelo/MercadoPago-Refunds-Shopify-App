@@ -1,0 +1,11 @@
+:root {
+  --table-border: #DFE3E8;
+  --color-archived: #637381;
+  --color-body-text: #212B36;
+  --header-font-weight: 500;
+}
+
+/* Breakpoint Queries */
+@custom-media --s (min-width: 40em);
+@custom-media --m (min-width: 48em);
+@custom-media --l (min-width: 64em);

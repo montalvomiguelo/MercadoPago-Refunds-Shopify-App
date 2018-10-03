@@ -1,23 +1,37 @@
 .line-item {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid $table-border;
+  border-bottom: 1px solid var(--table-border);
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .line-item-title {
   flex-grow: 1;
+  flex-basis: 100%;
   padding: 20px 10px 20px 0;
+
+  @media (--s) {
+    flex-basis: 200px;
+  }
+
+  @media (--m) {
+    flex-basis: 100%;
+  }
+
+  @media (--l) {
+    flex-basis: 200px;
+  }
+
   em {
     display: block;
     font-style: normal;
-    color: $color-archived;
+    color: var(--color-archived);
   }
 }
 
 .line-item-price {
   padding: 20px 10px 20px;
-  flex-basis: 100px;
 }
 
 .line-item-times {
@@ -30,7 +44,7 @@
 }
 
 .line-item-line-price {
-  flex-basis: 100px;
+  flex-basis: 7rem;
   padding: 20px 0 20px 10px;
   text-align: right;
 }

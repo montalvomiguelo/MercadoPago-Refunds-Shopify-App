@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>App</title>
   <link rel="stylesheet" href="https://sdks.shopifycdn.com/polaris/2.10.0/polaris.min.css" />
-  <link rel="stylesheet" href="css/style.css">
+  <% if ENV['RACK_ENV'] == 'production' %>
+    <link rel="stylesheet" href="/packs/application.css">
+  <% end %>
 </head>
 <body>
   <script src="https://cdn.shopify.com/s/assets/external/app.js"></script>

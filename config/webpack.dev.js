@@ -28,6 +28,26 @@ module.exports = merge(common, {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader'
       },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: paths.postcssConfigPath
+              }
+            }
+          }
+        ]
+      }
     ]
   }
 });

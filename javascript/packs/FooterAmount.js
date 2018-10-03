@@ -2,14 +2,14 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import InputGroup from './InputGroup';
+import { TextField } from '@shopify/polaris';
 
 function FooterAmount(props) {
   return (
     <div className="footer-amount">
       <span>Refund amount</span>
-      <InputGroup
-        append="$"
+      <TextField
+        prefix="$"
         value={props.amount}
         onChange={props.onChangeAmount}
       />
