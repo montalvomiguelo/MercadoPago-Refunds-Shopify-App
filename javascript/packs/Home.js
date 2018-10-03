@@ -26,8 +26,6 @@ class Home extends Component {
       .then(response => {
         const data = response.data;
 
-        console.log(data);
-
         const orders = data.map(order => [
           <Link url={`/order?id=${order.id}`}>{order.name}</Link>,
           moment(order.created_at).format('MMM DD, hh:mma'),

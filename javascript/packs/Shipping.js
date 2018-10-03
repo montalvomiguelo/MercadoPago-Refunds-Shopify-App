@@ -2,16 +2,17 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import InputGroup from './InputGroup';
+import { TextField } from '@shopify/polaris';
 
 function Shipping(props) {
   return (
     <div className="footer-shipping">
       <span>Shipping ($ {props.maximumRefundable} remaining)</span>
-      <InputGroup
-        append="$"
+      <TextField
+        type="text"
         value={props.shipping}
         onChange={props.onChangeShipping}
+        prefix="$"
       />
     </div>
   );
