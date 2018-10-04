@@ -349,26 +349,26 @@ class Refund extends Component {
         }
       }
     })
-    .then((response => {
-      const data = response.data;
-      const item = _.find(data.refund_line_items, {line_item_id: id});
+      .then((response => {
+        const data = response.data;
+        const item = _.find(data.refund_line_items, {line_item_id: id});
 
-      lineItem.linePrice = (item) ? numeral(item.price).multiply(item.quantity).value() : '0.00';
+        lineItem.linePrice = (item) ? numeral(item.price).multiply(item.quantity).value() : '0.00';
 
-      const taxLines = this.calculateTaxLines(data);
-      const shippingTax = response.data.shipping.tax;
+        const taxLines = this.calculateTaxLines(data);
+        const shippingTax = response.data.shipping.tax;
 
-      const tax = numeral(taxLines).add(shippingTax);
+        const tax = numeral(taxLines).add(shippingTax);
 
-      const subtotal = this.calculateRefundSubtotal(data);
-      const discount = this.calculateRefundDiscount(data);
+        const subtotal = this.calculateRefundSubtotal(data);
+        const discount = this.calculateRefundDiscount(data);
 
-      this.state.subtotal = subtotal;
-      this.state.discount = discount;
-      this.state.tax = tax.value();
-      this.state.refundAmount = this.calculateRefundAmount().toString();
-      this.setState(this.state);
-    }));
+        this.state.subtotal = subtotal;
+        this.state.discount = discount;
+        this.state.tax = tax.value();
+        this.state.refundAmount = this.calculateRefundAmount().toString();
+        this.setState(this.state);
+      }));
   }
 
   isButtonDisabled() {
@@ -382,9 +382,41 @@ class Refund extends Component {
   render() {
     const buttonDisabled = this.isButtonDisabled();
 
-    if (!this.state.lineItems) {
-      return <SkeletonOrder />;
-    }
+    const loadingStateContent = !this.state.lineItems ? (
+      <SkeletonOrder />
+    ) : null;
+
+    const refundContent = this.state.lineItems ? (
+      <Order
+        lineItems={this.state.lineItems}
+        subtotal={this.state.subtotal}
+        shipping={this.state.shipping}
+        discount={this.state.discount}
+        totalAvailableToRefund={this.state.totalAvailableToRefund}
+        refundAmount={this.state.refundAmount}
+        name={this.state.name}
+        address={this.state.address}
+        city={this.state.city}
+        province={this.state.province}
+        zip={this.state.zip}
+        country={this.state.country}
+        totalPrice={this.state.totalPrice}
+        currency={this.state.currency}
+        maximumRefundable={this.state.maximumRefundable}
+        financialStatus={this.state.financialStatus}
+        onChangeQty={this.onChangeQty.bind(this)}
+        tax={this.state.tax}
+        onChangeShipping={this.onChangeShipping.bind(this)}
+        onChangeAmount={this.handleInputChange('refundAmount')}
+        onChangeRestock={this.handleInputChange('restock')}
+        restock={this.state.restock}
+        note={this.state.note}
+        onChangeNote={this.handleInputChange('note')}
+        notify={this.state.notify}
+        onChangeNotify={this.handleInputChange('notify')}
+        totalRefund={this.state.totalRefund}
+      />
+    ) : null;
 
     return (
       <Page
@@ -399,35 +431,8 @@ class Refund extends Component {
           {content: 'View order', url: `/admin/orders/${this.state.orderId}`, target: 'parent'},
         ]}
       >
-        <Order
-          lineItems={this.state.lineItems}
-          subtotal={this.state.subtotal}
-          shipping={this.state.shipping}
-          discount={this.state.discount}
-          totalAvailableToRefund={this.state.totalAvailableToRefund}
-          refundAmount={this.state.refundAmount}
-          name={this.state.name}
-          address={this.state.address}
-          city={this.state.city}
-          province={this.state.province}
-          zip={this.state.zip}
-          country={this.state.country}
-          totalPrice={this.state.totalPrice}
-          currency={this.state.currency}
-          maximumRefundable={this.state.maximumRefundable}
-          financialStatus={this.state.financialStatus}
-          onChangeQty={this.onChangeQty.bind(this)}
-          tax={this.state.tax}
-          onChangeShipping={this.onChangeShipping.bind(this)}
-          onChangeAmount={this.handleInputChange('refundAmount')}
-          onChangeRestock={this.handleInputChange('restock')}
-          restock={this.state.restock}
-          note={this.state.note}
-          onChangeNote={this.handleInputChange('note')}
-          notify={this.state.notify}
-          onChangeNotify={this.handleInputChange('notify')}
-          totalRefund={this.state.totalRefund}
-        />
+        {loadingStateContent}
+        {refundContent}
       </Page>
     );
   }

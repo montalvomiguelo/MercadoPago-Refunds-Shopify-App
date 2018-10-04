@@ -43,13 +43,48 @@ class Home extends Component {
   }
 
   render() {
-    if (!this.state.orders) {
-      return <SkeletonHome />;
-    }
+    const loadingStateContent = !this.state.orders ? (
+      <SkeletonHome />
+    ) : null;
 
-    if (this.state.orders && this.state.orders.length === 0) {
-      return <EmptyHome />;
-    }
+    const emptyStateContent = this.state.orders && this.state.orders.length === 0 ? (
+      <EmptyHome />
+    ) : null;
+
+    const homeContent = this.state.orders && this.state.orders.length > 0 ? (
+      <Layout>
+        <Layout.Section>
+          <Banner
+            status="info"
+          >
+            <p>To refund an order, either select an order from your <Link url={`${window.shopOrigin}/admin/orders`} external={true}>Orders</Link> page or click on one of the recent orders below.</p>
+          </Banner>
+        </Layout.Section>
+        <Layout.Section>
+          <Card sectioned>
+            <DataTable
+              columnContentTypes={[
+                'text',
+                'text',
+                'text',
+                'text',
+                'text',
+                'text'
+              ]}
+              headings={[
+                'Order',
+                'Date',
+                'Placed by',
+                'Financial status',
+                'Fulfillment status',
+                'Total'
+              ]}
+              rows={this.state.orders}
+            />
+          </Card>
+        </Layout.Section>
+      </Layout>
+    ) : null;
 
     return (
       <Page
@@ -57,38 +92,9 @@ class Home extends Component {
           {content: 'Preferences', url: 'preferences'},
         ]}
       >
-        <Layout>
-          <Layout.Section>
-            <Banner
-              status="info"
-            >
-              <p>To refund an order, either select an order from your <Link url={`${window.shopOrigin}/admin/orders`} external={true}>Orders</Link> page or click on one of the recent orders below.</p>
-            </Banner>
-          </Layout.Section>
-          <Layout.Section>
-            <Card sectioned>
-              <DataTable
-                columnContentTypes={[
-                  'text',
-                  'text',
-                  'text',
-                  'text',
-                  'text',
-                  'text'
-                ]}
-                headings={[
-                  'Order',
-                  'Date',
-                  'Placed by',
-                  'Financial status',
-                  'Fulfillment status',
-                  'Total'
-                ]}
-                rows={this.state.orders}
-              />
-            </Card>
-          </Layout.Section>
-        </Layout>
+        {loadingStateContent}
+        {emptyStateContent}
+        {homeContent}
       </Page>
     );
   }
