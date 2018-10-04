@@ -8,8 +8,13 @@ import Preferences from './Preferences';
 
 import {
   BrowserRouter,
-  Route
+  Route,
+  withRouter
 } from 'react-router-dom';
+
+import RoutePropagator from '@shopify/react-shopify-app-route-propagator';
+
+const Propagator = withRouter(RoutePropagator);
 
 class App extends Component {
   // This line is very important! It tells React to attach the `easdk`
@@ -22,6 +27,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <React.Fragment>
+          <Propagator />
           <Route exact path="/" component={Home} />
           <Route path="/order" render={({ location }) => (
             <Refund search={location.search} />
