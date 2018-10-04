@@ -10,12 +10,14 @@ import _ from 'lodash';
 
 import numeral from 'numeral';
 
+import SkeletonOrder from './SkeletonOrder';
+
 class Refund extends Component {
   constructor(props) {
     super(props);
     this.state = {
       orderName: '',
-      lineItems: [],
+      lineItems: null,
       subtotal: 0,
       shipping: '0',
       discount: 0,
@@ -371,6 +373,10 @@ class Refund extends Component {
 
   render() {
     const buttonDisabled = this.isButtonDisabled();
+
+    if (!this.state.lineItems) {
+      return <SkeletonOrder />;
+    }
 
     return (
       <Page
