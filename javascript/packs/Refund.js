@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Page } from '@shopify/polaris';
 
@@ -40,13 +41,6 @@ class Refund extends Component {
       actionText: 'Refund',
       gateway: ''
     };
-  }
-
-  getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
   availableToRefundInOrder(order) {
@@ -111,9 +105,7 @@ class Refund extends Component {
   }
 
   componentDidMount() {
-    const orderId = this.getUrlParameter('id');
-
-    axios.get(`/orders/${orderId}`)
+    axios.get(`/orders/${this.props.orderId}`)
       .then(response => {
         const data = response.data;
 
@@ -161,7 +153,7 @@ class Refund extends Component {
           gateway: gateway
         });
 
-        return axios.post(`/orders/${orderId}/refunds/calculate`, {
+        return axios.post(`/orders/${this.props.orderId}/refunds/calculate`, {
           refund: {
             shipping: {
               amount: this.state.shipping
@@ -243,14 +235,12 @@ class Refund extends Component {
   }
 
   newRefundSubmit() {
-    const orderId = this.getUrlParameter('id');
-
     this.setState({
       isRefunding: true,
       actionText: 'Refunding'
     });
 
-    axios.post(`/orders/${orderId}/refunds`, {
+    axios.post(`/orders/${this.props.orderId}/refunds`, {
       refund: {
         restock: this.state.restock,
         notify: this.state.notify,
@@ -274,7 +264,7 @@ class Refund extends Component {
 
       ShopifyApp.flashNotice('Refund created successfully');
 
-      return axios.get(`/orders/${orderId}`)
+      return axios.get(`/orders/${this.props.orderId}`)
     })
     .then(response => {
       const data = response.data;
@@ -314,9 +304,7 @@ class Refund extends Component {
     this.state.shipping = value;
     this.setState(this.state);
 
-    const orderId = this.getUrlParameter('id');
-
-    axios.post(`/orders/${orderId}/refunds/calculate`, {
+    axios.post(`/orders/${this.props.orderId}/refunds/calculate`, {
       refund: {
         refund_line_items: this.state.lineItems,
         shipping: {
@@ -343,9 +331,7 @@ class Refund extends Component {
     lineItem.quantity = value;
     this.setState(this.state);
 
-    const orderId = this.getUrlParameter('id');
-
-    axios.post(`/orders/${orderId}/refunds/calculate`, {
+    axios.post(`/orders/${this.props.orderId}/refunds/calculate`, {
       refund: {
         refund_line_items: this.state.lineItems,
         shipping: {
@@ -385,7 +371,6 @@ class Refund extends Component {
 
   render() {
     const buttonDisabled = this.isButtonDisabled();
-    const orderId = this.getUrlParameter('id');
 
     return (
       <Page
@@ -397,7 +382,7 @@ class Refund extends Component {
         }}
         secondaryActions={[
           {content: 'Preferences', url: 'preferences'},
-          {content: 'View order', url: `/admin/orders/${orderId}`, target: 'parent'},
+          {content: 'View order', url: `/admin/orders/${this.props.orderId}`, target: 'parent'},
         ]}
       >
         <Order
@@ -433,5 +418,9 @@ class Refund extends Component {
     );
   }
 }
+
+Refund.propTypes = {
+  orderId: PropTypes.string.isRequired,
+};
 
 export default Refund;

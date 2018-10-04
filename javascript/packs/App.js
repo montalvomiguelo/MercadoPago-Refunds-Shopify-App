@@ -20,7 +20,9 @@ function App(props) {
       <BrowserRouter>
         <div>
           <Route exact path="/" component={Home} />
-          <Route path="/order" component={Refund} />
+          <Route path="/order" render={({ location }) => (
+            <Refund orderId={location.search.split('=').pop()} />
+          )} />
           <Route path="/preferences" component={Preferences} />
         </div>
       </BrowserRouter>
