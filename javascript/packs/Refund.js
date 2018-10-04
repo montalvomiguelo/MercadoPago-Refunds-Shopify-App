@@ -262,52 +262,52 @@ class Refund extends Component {
         amount: this.state.refundAmount
       }
     })
-    .then(response => {
-      const data = response.data;
+      .then(response => {
+        const data = response.data;
 
-      const maximumRefundable = numeral(this.state.maximumRefundable).subtract(data.shipping.amount).format('0,0.00');
+        const maximumRefundable = numeral(this.state.maximumRefundable).subtract(data.shipping.amount).format('0,0.00');
 
-      this.setState({
-        maximumRefundable: maximumRefundable,
-        actionText: 'Refund'
+        this.setState({
+          maximumRefundable: maximumRefundable,
+          actionText: 'Refund'
+        });
+
+        ShopifyApp.flashNotice('Refund created successfully');
+
+        return axios.get(`/orders/${this.state.orderId}`)
+      })
+      .then(response => {
+        const data = response.data;
+
+        const totalAvailableToRefund = this.availableToRefundInOrder(data);
+
+        const financialStatus = this.orderPaymentStatus(data);
+
+        const lineItems = this.orderLineItems(data);
+
+        this.updateRefundLineItems(lineItems, data.refunds);
+
+        this.setState({
+          refundAmount: '0',
+          subtotal: 0,
+          discount: 0,
+          shipping: '0',
+          tax: 0,
+          note: '',
+          lineItems: lineItems,
+          totalAvailableToRefund: totalAvailableToRefund,
+          financialStatus: financialStatus,
+          totalRefund: data.total_refund,
+          isRefunding: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isRefunding: false,
+          actionText: 'Refund'
+        });
+        ShopifyApp.flashError(error.response.data);
       });
-
-      ShopifyApp.flashNotice('Refund created successfully');
-
-      return axios.get(`/orders/${this.state.orderId}`)
-    })
-    .then(response => {
-      const data = response.data;
-
-      const totalAvailableToRefund = this.availableToRefundInOrder(data);
-
-      const financialStatus = this.orderPaymentStatus(data);
-
-      const lineItems = this.orderLineItems(data);
-
-      this.updateRefundLineItems(lineItems, data.refunds);
-
-      this.setState({
-        refundAmount: '0',
-        subtotal: 0,
-        discount: 0,
-        shipping: '0',
-        tax: 0,
-        note: '',
-        lineItems: lineItems,
-        totalAvailableToRefund: totalAvailableToRefund,
-        financialStatus: financialStatus,
-        totalRefund: data.total_refund,
-        isRefunding: false
-      });
-    })
-    .catch(error => {
-      this.setState({
-        isRefunding: false,
-        actionText: 'Refund'
-      });
-      ShopifyApp.flashError(error.response.data);
-    });
   }
 
   onChangeShipping(value, id) {
@@ -322,18 +322,18 @@ class Refund extends Component {
         }
       }
     })
-    .then(response => {
-      const data = response.data;
+      .then(response => {
+        const data = response.data;
 
-      const taxLines = this.calculateTaxLines(data);
-      const shippingTax = response.data.shipping.tax;
+        const taxLines = this.calculateTaxLines(data);
+        const shippingTax = response.data.shipping.tax;
 
-      const tax = numeral(taxLines).add(shippingTax);
+        const tax = numeral(taxLines).add(shippingTax);
 
-      this.state.tax = tax.value();
-      this.state.refundAmount = this.calculateRefundAmount().toString();
-      this.setState(this.state);
-    });
+        this.state.tax = tax.value();
+        this.state.refundAmount = this.calculateRefundAmount().toString();
+        this.setState(this.state);
+      });
   }
 
   onChangeQty(value, id) {
