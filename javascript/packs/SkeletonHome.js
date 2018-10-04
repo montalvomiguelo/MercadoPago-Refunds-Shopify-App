@@ -20,51 +20,16 @@ function SkeletonHome(props) {
         <Layout.Section>
           <Card>
             <Card.Section>
-              <TextContainer>
+              <TextContainer spacing="tight">
                 <SkeletonBodyText lines={1} />
               </TextContainer>
             </Card.Section>
             <Card.Section>
-              <TextContainer>
+              <TextContainer spacing="tight">
                 <SkeletonBodyText lines={1} />
               </TextContainer>
             </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
-              <TextContainer>
-                <SkeletonBodyText lines={1} />
-              </TextContainer>
-            </Card.Section>
-            <Card.Section>
+            <Card.Section spacing="tight">
               <TextContainer>
                 <SkeletonBodyText lines={1} />
               </TextContainer>

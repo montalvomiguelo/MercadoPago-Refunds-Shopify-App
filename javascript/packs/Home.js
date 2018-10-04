@@ -14,12 +14,13 @@ import {
 import axios from 'axios';
 
 import SkeletonHome from './SkeletonHome';
+import EmptyHome from './EmptyHome';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      orders: []
+      orders: null
     };
   }
 
@@ -42,8 +43,12 @@ class Home extends Component {
   }
 
   render() {
-    if (this.state.orders.length === 0) {
+    if (!this.state.orders) {
       return <SkeletonHome />;
+    }
+
+    if (this.state.orders && this.state.orders.length === 0) {
+      return <EmptyHome />;
     }
 
     return (
