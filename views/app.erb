@@ -8,31 +8,13 @@
   <% if ENV['RACK_ENV'] == 'production' %>
     <link rel="stylesheet" href="/packs/application.css">
   <% end %>
+  <meta name="ShopOrigin" content="<%= current_shop_url %>" />
+  <meta name="APIKey" content="<%= settings.api_key %>" />
+  <% if ENV['RACK_ENV'] == 'production' %>
+    <meta name="ForceRedirect" content="true" />
+  <% end %>
 </head>
 <body>
-  <script src="https://cdn.shopify.com/s/assets/external/app.js"></script>
-
-  <script type="text/javascript">
-    window.apiKey = "<%= settings.api_key %>";
-    window.shopOrigin = "<%= current_shop_url %>";
-
-    var shopifyAppConfig = {
-      apiKey: window.apiKey,
-      shopOrigin: window.shopOrigin,
-    };
-
-    // This will allow you to access the app outside of the Shopify
-    // parent iframe in development mode. Doing this will give you
-    // access to React and Redux dev tools, but will also disrupt
-    // postmessages to the parent and block EASDK calls
-    // https://help.shopify.com/api/sdks/shopify-apps/embedded-app-sdk/methods#shopifyapp-init-config
-    <% if ENV['RACK_ENV'] == 'development' %>
-      shopifyAppConfig.forceRedirect = false;
-    <% end %>
-
-    ShopifyApp.init(shopifyAppConfig);
-  </script>
-
   <div id="root"></div>
   <% if ENV['RACK_ENV'] == 'production' %>
     <script src="/packs/application.js"></script>
