@@ -24,7 +24,7 @@ class App extends Component {
         <React.Fragment>
           <Route exact path="/" component={Home} />
           <Route path="/order" render={({ location }) => (
-            <Refund orderId={location.search.split('=').pop()} />
+            <Refund search={location.search} />
           )} />
           <Route path="/preferences" component={Preferences} />
         </React.Fragment>

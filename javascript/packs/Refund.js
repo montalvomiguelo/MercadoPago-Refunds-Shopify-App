@@ -41,8 +41,16 @@ class Refund extends Component {
       totalRefund: '',
       isRefunding: false,
       actionText: 'Refund',
-      gateway: ''
+      gateway: '',
+      orderId: this.getParamFromLocationSearch('id'),
     };
+  }
+
+  getParamFromLocationSearch(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(this.props.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
   availableToRefundInOrder(order) {
@@ -107,7 +115,7 @@ class Refund extends Component {
   }
 
   componentDidMount() {
-    axios.get(`/orders/${this.props.orderId}`)
+    axios.get(`/orders/${this.state.orderId}`)
       .then(response => {
         const data = response.data;
 
@@ -155,7 +163,7 @@ class Refund extends Component {
           gateway: gateway
         });
 
-        return axios.post(`/orders/${this.props.orderId}/refunds/calculate`, {
+        return axios.post(`/orders/${this.state.orderId}/refunds/calculate`, {
           refund: {
             shipping: {
               amount: this.state.shipping
@@ -242,7 +250,7 @@ class Refund extends Component {
       actionText: 'Refunding'
     });
 
-    axios.post(`/orders/${this.props.orderId}/refunds`, {
+    axios.post(`/orders/${this.state.orderId}/refunds`, {
       refund: {
         restock: this.state.restock,
         notify: this.state.notify,
@@ -266,7 +274,7 @@ class Refund extends Component {
 
       ShopifyApp.flashNotice('Refund created successfully');
 
-      return axios.get(`/orders/${this.props.orderId}`)
+      return axios.get(`/orders/${this.state.orderId}`)
     })
     .then(response => {
       const data = response.data;
@@ -306,7 +314,7 @@ class Refund extends Component {
     this.state.shipping = value;
     this.setState(this.state);
 
-    axios.post(`/orders/${this.props.orderId}/refunds/calculate`, {
+    axios.post(`/orders/${this.state.orderId}/refunds/calculate`, {
       refund: {
         refund_line_items: this.state.lineItems,
         shipping: {
@@ -333,7 +341,7 @@ class Refund extends Component {
     lineItem.quantity = value;
     this.setState(this.state);
 
-    axios.post(`/orders/${this.props.orderId}/refunds/calculate`, {
+    axios.post(`/orders/${this.state.orderId}/refunds/calculate`, {
       refund: {
         refund_line_items: this.state.lineItems,
         shipping: {
@@ -388,7 +396,7 @@ class Refund extends Component {
         }}
         secondaryActions={[
           {content: 'Preferences', url: 'preferences'},
-          {content: 'View order', url: `/admin/orders/${this.props.orderId}`, target: 'parent'},
+          {content: 'View order', url: `/admin/orders/${this.state.orderId}`, target: 'parent'},
         ]}
       >
         <Order
@@ -426,7 +434,7 @@ class Refund extends Component {
 }
 
 Refund.propTypes = {
-  orderId: PropTypes.string.isRequired,
+  search: PropTypes.string.isRequired,
 };
 
 export default Refund;
