@@ -5,11 +5,13 @@ import { hot } from 'react-hot-loader';
 import Refund from './Refund';
 import Home from './Home';
 import Preferences from './Preferences';
+import NotFound from './NotFound';
 
 import {
   BrowserRouter,
   Route,
-  withRouter
+  withRouter,
+  Switch
 } from 'react-router-dom';
 
 import RoutePropagator from '@shopify/react-shopify-app-route-propagator';
@@ -28,11 +30,14 @@ class App extends Component {
       <BrowserRouter>
         <React.Fragment>
           <Propagator />
-          <Route exact path="/" component={Home} />
-          <Route path="/order" render={({ location }) => (
-            <Refund search={location.search} />
-          )} />
-          <Route path="/preferences" component={Preferences} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/order" render={({ location }) => (
+              <Refund search={location.search} />
+            )} />
+            <Route path="/preferences" component={Preferences} />
+            <Route component={NotFound} />
+          </Switch>
         </React.Fragment>
       </BrowserRouter>
     );
