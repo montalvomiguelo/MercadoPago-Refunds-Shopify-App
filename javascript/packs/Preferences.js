@@ -103,7 +103,8 @@ class Preferences extends Component {
         title="Preferences"
         primaryAction={{
           content: 'Save',
-          onAction: this.submitCredentials.bind(this)
+          onAction: this.submitCredentials.bind(this),
+          disabled: !this.state.clientId || !this.state.clientSecret
         }}
       >
         {loadingStateContent}
