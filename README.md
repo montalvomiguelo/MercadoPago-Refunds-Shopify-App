@@ -43,10 +43,10 @@ Start the app
 rackup
 ```
 
-Npm scripts (Webpack development & production)
+Npm scripts (Webpack dev server & production build)
 
 ```
-npm run start
+npm start
 npm run build
 ```
 
