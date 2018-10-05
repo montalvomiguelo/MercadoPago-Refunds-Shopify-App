@@ -5,7 +5,10 @@ import {
   Layout,
   Card,
   TextField,
-  FormLayout
+  FormLayout,
+  SkeletonPage,
+  SkeletonBodyText,
+  TextContainer
 } from '@shopify/polaris';
 
 import CredentialsInfo from './CredentialsInfo';
@@ -54,6 +57,47 @@ class Preferences extends Component {
   }
 
   render() {
+    const loadingStateContent = !this.state.clientId ? (
+      <SkeletonPage>
+        <Layout>
+          <Layout.AnnotatedSection
+            description={<SkeletonBodyText />}
+          >
+            <Card sectioned>
+              <TextContainer>
+                <SkeletonBodyText />
+              </TextContainer>
+            </Card>
+          </Layout.AnnotatedSection>
+        </Layout>
+      </SkeletonPage>
+    ): null;
+
+    const content = this.state.clientId ? (
+      <Layout>
+        <Layout.AnnotatedSection
+          title="Configure your credentials"
+          description={<CredentialsInfo />}
+        >
+          <Card sectioned>
+            <FormLayout>
+              <TextField
+                label="Client id"
+                value={this.state.clientId}
+                onChange={this.handleInputchange('clientId')}
+              />
+              <TextField
+                type="password"
+                label="Client secret"
+                value={this.state.clientSecret}
+                onChange={this.handleInputchange('clientSecret')}
+              />
+            </FormLayout>
+          </Card>
+        </Layout.AnnotatedSection>
+      </Layout>
+    ) : null;
+
     return (
       <Page
         title="Preferences"
@@ -62,28 +106,8 @@ class Preferences extends Component {
           onAction: this.submitCredentials.bind(this)
         }}
       >
-        <Layout>
-          <Layout.AnnotatedSection
-            title="Configure your credentials"
-            description={<CredentialsInfo />}
-          >
-            <Card sectioned>
-              <FormLayout>
-                <TextField
-                  label="Client id"
-                  value={this.state.clientId}
-                  onChange={this.handleInputchange('clientId')}
-                />
-                <TextField
-                  type="password"
-                  label="Client secret"
-                  value={this.state.clientSecret}
-                  onChange={this.handleInputchange('clientSecret')}
-                />
-              </FormLayout>
-            </Card>
-          </Layout.AnnotatedSection>
-        </Layout>
+        {loadingStateContent}
+        {content}
       </Page>
     );
   }
