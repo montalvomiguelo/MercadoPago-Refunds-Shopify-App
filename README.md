@@ -43,12 +43,11 @@ Start the app
 rackup
 ```
 
-Gulp tasks
+Npm scripts (Webpack development & production)
 
 ```
-gulp js
-gulp scss
-gulp watch
+npm run start
+npm run build
 ```
 
 The embedded app sdk won't load non https content so you'll need to use a forwarding service like ngrok or forwardhq. Set your application url in the Shopify Partner area to your forwarded url. However The redirect_uri should still be http://localhost:9292/auth/shopify/callback which will allow you to install your app on a live shop while running it locally.
