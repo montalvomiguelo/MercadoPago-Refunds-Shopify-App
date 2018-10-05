@@ -128,7 +128,7 @@ class App < Sinatra::Base
 
       transaction = mercadopago.post("/collections/#{payment_id}/refunds", data)
 
-      halt 422, 'Invalid amount' if transaction['status'] == '400'
+      halt 422, transaction['response']['message'] if transaction['status'] == '400'
 
       # Store refund amount in metafield
       @order.persist_refund_amount(transaction['response']['amount'])
