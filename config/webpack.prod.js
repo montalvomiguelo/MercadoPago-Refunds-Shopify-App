@@ -29,6 +29,12 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.(js|jsx|mjs)$/,
+        enforce: 'pre',
+        loader: 'eslint-loader',
+        exclude: /(node_modules|bower_components)/,
+      },
+      {
+        test: /\.(js|jsx|mjs)$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader'
       },
