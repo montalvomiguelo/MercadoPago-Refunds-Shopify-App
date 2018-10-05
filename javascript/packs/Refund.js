@@ -48,6 +48,10 @@ class Refund extends Component {
     };
   }
 
+  static contextTypes = {
+    easdk: PropTypes.object,
+  };
+
   getParamFromLocationSearch(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -274,7 +278,7 @@ class Refund extends Component {
           actionText: 'Refund'
         });
 
-        ShopifyApp.flashNotice('Refund created successfully');
+        this.context.easdk.showFlashNotice('Refund created successfully');
 
         return axios.get(`/orders/${this.state.orderId}`)
       })
@@ -308,7 +312,7 @@ class Refund extends Component {
           isRefunding: false,
           actionText: 'Refund'
         });
-        ShopifyApp.flashError(error.response.data);
+        this.context.easdk.showFlashNotice(error.response.data, {error: true});
       });
   }
 
