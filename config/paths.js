@@ -7,5 +7,5 @@ module.exports = {
   appIndex: resolveApp('javascript/packs/application.js'),
   appBuild: resolveApp('public/packs'),
   servedPath: 'https://localhost:3035/packs/',
-  postcssConfigPath: './config',
+  postcssConfigPath: './config'
 };

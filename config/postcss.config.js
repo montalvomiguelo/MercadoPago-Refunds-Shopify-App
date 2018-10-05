@@ -9,6 +9,7 @@ module.exports = {
         'not ie < 9',
       ]
     },
-    'precss': {}
+    'precss': {},
+    'postcss-flexbugs-fixes': {},
   }
 }
