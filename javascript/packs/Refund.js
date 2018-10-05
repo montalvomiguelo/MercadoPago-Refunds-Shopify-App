@@ -43,6 +43,7 @@ class Refund extends Component {
       actionText: 'Refund',
       gateway: '',
       orderId: this.getParamFromLocationSearch('id'),
+      fetchingLine: 0,
     };
   }
 
@@ -339,6 +340,7 @@ class Refund extends Component {
   onChangeQty(value, id) {
     const lineItem = _.find(this.state.lineItems, {line_item_id: id});
     lineItem.quantity = value;
+    this.state.fetchingLine = lineItem.line_item_id;
     this.setState(this.state);
 
     axios.post(`/orders/${this.state.orderId}/refunds/calculate`, {
@@ -367,6 +369,7 @@ class Refund extends Component {
         this.state.discount = discount;
         this.state.tax = tax.value();
         this.state.refundAmount = this.calculateRefundAmount().toString();
+        this.state.fetchingLine = 0;
         this.setState(this.state);
       }));
   }
@@ -415,6 +418,7 @@ class Refund extends Component {
         notify={this.state.notify}
         onChangeNotify={this.handleInputChange('notify')}
         totalRefund={this.state.totalRefund}
+        fetchingLine={this.state.fetchingLine}
       />
     ) : null;
 

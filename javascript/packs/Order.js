@@ -23,6 +23,7 @@ function Order(props) {
           <LineItems
             items={props.lineItems}
             onChangeQty={props.onChangeQty}
+            fetchingLine={props.fetchingLine}
           />
           <Footer
             subtotal={props.subtotal}
@@ -40,6 +41,7 @@ function Order(props) {
             onChangeNote={props.onChangeNote}
             notify={props.notify}
             onChangeNotify={props.onChangeNotify}
+            fetchingLine={props.fetchingLine}
           />
         </Card>
       </Layout.Section>
@@ -88,8 +90,8 @@ Order.propTypes = {
   onChangeNote: PropTypes.func.isRequired,
   notify: PropTypes.bool.isRequired,
   onChangeNotify: PropTypes.func.isRequired,
-  totalRefund: PropTypes.string.isRequired
+  totalRefund: PropTypes.string.isRequired,
+  fetchingLine: PropTypes.number.isRequired,
 };
 
 export default Order;
-

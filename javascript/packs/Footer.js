@@ -15,14 +15,26 @@ import FooterAmount from './FooterAmount';
 function Footer(props) {
   return (
     <div className="footer">
-      <Amount title="Subtotal" price={props.subtotal} />
+      <Amount
+        title="Subtotal"
+        price={props.subtotal}
+        fetchingLine={props.fetchingLine}
+      />
       <Shipping
         shipping={props.shipping}
         maximumRefundable={props.maximumRefundable}
         onChangeShipping={props.onChangeShipping}
       />
-      <Amount title="Discounts" price={props.discount} />
-      <Amount title="Tax" price={props.tax} />
+      <Amount
+        title="Discounts"
+        price={props.discount}
+        fetchingLine={props.fetchingLine}
+      />
+      <Amount
+        title="Tax"
+        price={props.tax}
+        fetchingLine={props.fetchingLine}
+      />
       <Amount title="Total available to refund" price={props.totalAvailableToRefund} />
       <FooterAmount
         amount={props.refundAmount}
@@ -63,7 +75,8 @@ Footer.propTypes = {
   note: PropTypes.string.isRequired,
   onChangeNote: PropTypes.func.isRequired,
   notify: PropTypes.bool.isRequired,
-  onChangeNotify: PropTypes.func.isRequired
+  onChangeNotify: PropTypes.func.isRequired,
+  fetchingLine: PropTypes.number.isRequired,
 };
 
 export default Footer;

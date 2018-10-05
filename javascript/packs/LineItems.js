@@ -4,6 +4,8 @@ import { TextField } from '@shopify/polaris';
 
 import PropTypes from 'prop-types';
 
+import LinePrice from './LinePrice';
+
 function LineItems(props) {
   return (
     <ul className="line-items">
@@ -30,7 +32,9 @@ function LineItems(props) {
               />
             </div>
           </div>
-          <span className="line-item-line-price">$ {item.linePrice}</span>
+          <span className="line-item-line-price">
+            <LinePrice line={item} fetchingLine={props.fetchingLine} />
+          </span>
         </li>
       ))}
     </ul>
@@ -39,7 +43,8 @@ function LineItems(props) {
 
 LineItems.propTypes = {
   items: PropTypes.array.isRequired,
-  onChangeQty: PropTypes.func.isRequired
+  onChangeQty: PropTypes.func.isRequired,
+  fetchingLine: PropTypes.number.isRequired,
 };
 
 export default LineItems;
