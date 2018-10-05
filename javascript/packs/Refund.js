@@ -44,6 +44,7 @@ class Refund extends Component {
       gateway: '',
       orderId: this.getParamFromLocationSearch('id'),
       fetchingLine: 0,
+      fetchingShipping: false
     };
   }
 
@@ -312,7 +313,12 @@ class Refund extends Component {
   }
 
   onChangeShipping(value, id) {
-    this.state.shipping = value;
+    this.state.shipping = value <= this.state.maximumRefundable
+      ? value
+      : this.state.maximumRefundable;
+
+    this.state.fetchingShipping = true;
+
     this.setState(this.state);
 
     axios.post(`/orders/${this.state.orderId}/refunds/calculate`, {
@@ -333,6 +339,7 @@ class Refund extends Component {
 
         this.state.tax = tax.value();
         this.state.refundAmount = this.calculateRefundAmount().toString();
+        this.state.fetchingShipping = false;
         this.setState(this.state);
       });
   }
@@ -430,6 +437,7 @@ class Refund extends Component {
         onChangeNotify={this.handleInputChange('notify')}
         totalRefund={this.state.totalRefund}
         fetchingLine={this.state.fetchingLine}
+        fetchingShipping={this.state.fetchingShipping}
       />
     ) : null;
 

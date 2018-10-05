@@ -34,6 +34,7 @@ function Footer(props) {
         title="Tax"
         price={props.tax}
         fetchingLine={props.fetchingLine}
+        fetchingShipping={props.fetchingShipping}
       />
       <Amount title="Total available to refund" price={props.totalAvailableToRefund} />
       <FooterAmount
@@ -77,6 +78,7 @@ Footer.propTypes = {
   notify: PropTypes.bool.isRequired,
   onChangeNotify: PropTypes.func.isRequired,
   fetchingLine: PropTypes.number.isRequired,
+  fetchingShipping: PropTypes.bool.isRequired,
 };
 
 export default Footer;

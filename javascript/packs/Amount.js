@@ -3,7 +3,15 @@ import PropTypes from 'prop-types';
 import { Spinner } from '@shopify/polaris';
 
 function Amount(props) {
-  const Price = props.fetchingLine && props.fetchingLine !== 0 ? (
+  const isFetching = () => {
+    if (props.fetchingLine && props.fetchingLine || props.fetchingShipping) {
+      return true;
+    }
+
+    return false;
+  }
+
+  const Price = isFetching() ? (
     <em><Spinner color="teal" size="small" /></em>
   ) : (
     <em>$ {props.price}</em>
@@ -21,6 +29,7 @@ Amount.propTypes = {
   title: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   fetchingLine: PropTypes.number,
+  fetchingShipping: PropTypes.bool,
 };
 
 export default Amount;

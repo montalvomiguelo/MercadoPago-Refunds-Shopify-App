@@ -42,6 +42,7 @@ function Order(props) {
             notify={props.notify}
             onChangeNotify={props.onChangeNotify}
             fetchingLine={props.fetchingLine}
+            fetchingShipping={props.fetchingShipping}
           />
         </Card>
       </Layout.Section>
@@ -92,6 +93,7 @@ Order.propTypes = {
   onChangeNotify: PropTypes.func.isRequired,
   totalRefund: PropTypes.string.isRequired,
   fetchingLine: PropTypes.number.isRequired,
+  fetchingShipping: PropTypes.bool.isRequired,
 };
 
 export default Order;
