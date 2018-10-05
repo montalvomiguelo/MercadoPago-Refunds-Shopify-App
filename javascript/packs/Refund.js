@@ -339,8 +339,19 @@ class Refund extends Component {
 
   onChangeQty(value, id) {
     const lineItem = _.find(this.state.lineItems, {line_item_id: id});
-    lineItem.quantity = value;
+
+    if (value === lineItem.quantity) {
+      return;
+    }
+
+    const maxAvailable = lineItem.lineQty - lineItem.refund;
+
+    lineItem.quantity = value <= maxAvailable
+      ? value
+      : maxAvailable;
+
     this.state.fetchingLine = lineItem.line_item_id;
+
     this.setState(this.state);
 
     axios.post(`/orders/${this.state.orderId}/refunds/calculate`, {
