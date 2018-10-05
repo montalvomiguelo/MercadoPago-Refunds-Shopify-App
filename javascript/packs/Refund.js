@@ -396,8 +396,11 @@ class Refund extends Component {
     const refundAmount = numeral(this.state.refundAmount).value();
     const isRefunding = this.state.isRefunding;
     const isGatewayMercadoPago = this.state.gateway == 'mercado_pago';
+    const isFetching = this.state.fetchingLine || this.state.fetchingShipping;
 
-    return (!refundAmount || isRefunding || !isGatewayMercadoPago) ? true : false;
+    return !refundAmount || isRefunding || !isGatewayMercadoPago || isFetching
+      ? true
+      : false;
   }
 
   render() {
