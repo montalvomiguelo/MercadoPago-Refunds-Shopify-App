@@ -27,9 +27,9 @@ class Preferences extends Component {
 
   submitCredentials() {
     axios.put('/shop', {
-        client_id: this.state.clientId,
-        client_secret: this.state.clientSecret
-      })
+      client_id: this.state.clientId,
+      client_secret: this.state.clientSecret
+    })
       .then(response => {
         const data = response.data;
 
