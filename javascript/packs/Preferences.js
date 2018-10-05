@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Page,
@@ -24,6 +25,10 @@ class Preferences extends Component {
     }
   }
 
+  static contextTypes = {
+    easdk: PropTypes.object,
+  };
+
   handleInputchange(field) {
     return (value) => this.setState({[field]: value});
   }
@@ -41,7 +46,7 @@ class Preferences extends Component {
           clientSecret: data.encrypted_mp_client_secret || '',
         });
 
-        ShopifyApp.flashNotice('Preferences saved');
+        this.context.easdk.showFlashNotice('Preferences saved');
       });
   }
 
