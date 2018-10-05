@@ -51,7 +51,7 @@ class Preferences extends Component {
         const data = response.data;
         this.setState({
           clientId: data.mp_client_id || '',
-          clientSecret: data.encrypted_mp_client_secret || '',
+          clientSecret: data.mp_secret || '',
         });
       });
   }
@@ -87,7 +87,7 @@ class Preferences extends Component {
                 onChange={this.handleInputchange('clientId')}
               />
               <TextField
-                type="password"
+                type="text"
                 label="Client secret"
                 value={this.state.clientSecret}
                 onChange={this.handleInputchange('clientSecret')}

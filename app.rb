@@ -169,6 +169,7 @@ class App < Sinatra::Base
   get '/shop' do
     shopify_session do
       @shop = current_shop
+      @shop['mp_secret'] = @shop.mp_client_secret
 
       json @shop
     end
