@@ -111,7 +111,7 @@ class Refund extends Component {
 
     _.forEach(refundsWithItem, refund => {
       _.forEach(refund.refund_line_items, line => {
-        if (line.line_item_id == item.line_item_id) {
+        if (line.line_item_id === item.line_item_id) {
           lines.push(line);
         }
       });
@@ -199,7 +199,7 @@ class Refund extends Component {
       return 'Partially refunded';
     }
 
-    if (totalRefund.value() == totalPrice.value()) {
+    if (totalRefund.value() === totalPrice.value()) {
       return 'Refunded';
     }
 
@@ -399,7 +399,7 @@ class Refund extends Component {
   isButtonDisabled() {
     const refundAmount = numeral(this.state.refundAmount).value();
     const isRefunding = this.state.isRefunding;
-    const isGatewayMercadoPago = this.state.gateway == 'mercado_pago';
+    const isGatewayMercadoPago = this.state.gateway === 'mercado_pago';
     const isFetching = this.state.fetchingLine || this.state.fetchingShipping;
 
     return !refundAmount || isRefunding || !isGatewayMercadoPago || isFetching

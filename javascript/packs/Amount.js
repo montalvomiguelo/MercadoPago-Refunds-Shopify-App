@@ -4,7 +4,7 @@ import { Spinner } from '@shopify/polaris';
 
 function Amount(props) {
   const isFetching = () => {
-    if (props.fetchingLine && props.fetchingLine || props.fetchingShipping) {
+    if ((props.fetchingLine && props.fetchingLine) || props.fetchingShipping) {
       return true;
     }
 

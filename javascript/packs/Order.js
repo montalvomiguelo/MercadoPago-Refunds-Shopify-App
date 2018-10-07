@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {
   Layout,
   Card,
-  Badge
 } from '@shopify/polaris';
 
 import LineItems from './LineItems';
