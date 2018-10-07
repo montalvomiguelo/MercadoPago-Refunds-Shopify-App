@@ -21,7 +21,8 @@ class Preferences extends Component {
     super(props);
     this.state = {
       clientId: '',
-      clientSecret: ''
+      clientSecret: '',
+      fetching: true,
     }
   }
 
@@ -43,7 +44,7 @@ class Preferences extends Component {
 
         this.setState({
           clientId: data.mp_client_id || '',
-          clientSecret: data.encrypted_mp_client_secret || '',
+          clientSecret: data.mp_secret || '',
         });
 
         this.context.easdk.showFlashNotice('Preferences saved');
@@ -57,12 +58,13 @@ class Preferences extends Component {
         this.setState({
           clientId: data.mp_client_id || '',
           clientSecret: data.mp_secret || '',
+          fetching: false,
         });
       });
   }
 
   render() {
-    const loadingStateContent = !this.state.clientId ? (
+    const loadingStateContent = this.state.fetching ? (
       <SkeletonPage>
         <Layout>
           <Layout.AnnotatedSection
@@ -78,7 +80,7 @@ class Preferences extends Component {
       </SkeletonPage>
     ): null;
 
-    const content = this.state.clientId ? (
+    const content = !this.state.fetching ? (
       <Layout>
         <Layout.AnnotatedSection
           title="Configure your credentials"

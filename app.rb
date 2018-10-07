@@ -177,15 +177,20 @@ class App < Sinatra::Base
 
   put '/shop' do
     shopify_session do
-      shop = current_shop
+      @shop = current_shop
 
       request.body.rewind
       data = JSON.parse(request.body.read)
 
-      shop.mp_client_id = data['client_id']
-      shop.mp_client_secret = data['client_secret']
+      @shop.mp_client_id = data['client_id']
+      @shop.mp_client_secret = data['client_secret']
 
-      json shop.save
+      @shop.save
+
+      @shop.refresh
+      @shop['mp_secret'] = @shop.mp_client_secret
+
+      json @shop
     end
   end
 
